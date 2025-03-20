@@ -1,0 +1,56 @@
+/*-- scss:defaults --*/
+$bar-color1: #D8D8D8;
+$bar-color2: #E8E8E8;
+
+/*-- scss:rules --*/
+
+/* Alternating colors for sidebar items within each section */
+#quarto-sidebar .sidebar-item > ul > li:nth-child(even) {
+  background-color: $bar-color1;
+}
+
+#quarto-sidebar .sidebar-item > ul > li:nth-child(odd) {
+  background-color: $bar-color2;
+}
+
+/* Boxes of items within each section */
+#quarto-sidebar .sidebar-item > ul > li {
+  padding: 12px;
+  border-radius: 5px;
+  margin-bottom: -8px;
+}
+
+/* Section headings box */
+#quarto-sidebar .text-start {
+  padding: 8px;
+  margin-top: 5px;
+}
+
+/* Section headings text */
+.sidebar-item-section > .sidebar-item-container > a:first-child .menu-text {
+  font-size: 1.3em;
+}
+
+/* Style for alternating colors of dropdown items */
+.dropdown-menu > li:nth-child(odd) > .dropdown-item {
+  background-color: $bar-color1;
+}
+
+.dropdown-menu > li:nth-child(even) > .dropdown-item {
+  background-color: $bar-color2;
+}
+
+/* Optional: Add padding or other styles to improve appearance */
+.dropdown-item {
+  display: block; /* Ensure the entire item is clickable */
+}
+
+/* Header titles in navbar dropdown */
+.dropdown-menu .dropdown-header {
+  font-size: 1.5em;
+  margin-bottom: 8px;
+}
+
+.dropdown-divider {
+  margin-top: 0px;
+}

@@ -1,0 +1,34 @@
+project:
+  type: website
+  pre-render: "echo Let the rendering begin!"
+  # post-render: "Rendering done!"
+
+website:
+  title: "Various notes about R"
+  repo-url: https://github.com/mathiaslj/R_notes
+  repo-actions: [source]
+  back-to-top-navigation: true
+  bread-crumbs: false
+  navbar:
+    left:
+      - sidebar:labs
+    right: 
+      - icon: github
+        href: https://github.com/mathiaslj/R_notes
+      
+  sidebar: 
+    - id: labs
+      title: Lab assignments
+      style: "docked"
+      collapse-level: 1
+      contents:
+        - section: "Lab assignments"
+          contents:
+            - auto: "labs/*.Rmd"
+        
+format:
+  html:
+    theme: 
+      - flatly
+      - styles.scss
+    toc: true
