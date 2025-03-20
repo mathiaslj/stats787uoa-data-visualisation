@@ -28,9 +28,12 @@ jobs:
           packages: |
             rmarkdown
             knitr
+            prettydoc
             ggplot2
             tidyverse
             gggrid
+            ggthemes
+            paletteer
           
       - name: Render and Publish
         uses: quarto-dev/quarto-actions/publish@v2
