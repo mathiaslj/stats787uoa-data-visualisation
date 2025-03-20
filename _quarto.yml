@@ -5,7 +5,7 @@ project:
 
 website:
   title: "Various notes about R"
-  repo-url: https://github.com/mathiaslj/R_notes
+  repo-url: https://github.com/mathiaslj/stats787uoa-data-visualisation
   repo-actions: [source]
   back-to-top-navigation: true
   bread-crumbs: false
@@ -14,7 +14,7 @@ website:
       - sidebar:labs
     right: 
       - icon: github
-        href: https://github.com/mathiaslj/R_notes
+        href: https://github.com/mathiaslj/stats787uoa-data-visualisation
       
   sidebar: 
     - id: labs
