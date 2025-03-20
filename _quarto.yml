@@ -4,7 +4,7 @@ project:
   # post-render: "Rendering done!"
 
 website:
-  title: "Various notes about R"
+  title: "STATS 787: Data Visualisation lab assignments"
   repo-url: https://github.com/mathiaslj/stats787uoa-data-visualisation
   repo-actions: [source]
   back-to-top-navigation: true
