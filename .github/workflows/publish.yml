@@ -27,6 +27,10 @@ jobs:
         with:
           packages: |
             rmarkdown
+            knitr
+            ggplot2
+            tidyverse
+            gggrid
           
       - name: Render and Publish
         uses: quarto-dev/quarto-actions/publish@v2
