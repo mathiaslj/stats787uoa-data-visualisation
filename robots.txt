@@ -1,0 +1,1 @@
+Sitemap: https://mathiaslj.github.io/stats787uoa-data-visualisation/sitemap.xml

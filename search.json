@@ -1,0 +1,262 @@
+[
+  {
+    "objectID": "labs/lab2_answer.html",
+    "href": "labs/lab2_answer.html",
+    "title": "Lab2 - The grid Graphics System",
+    "section": "",
+    "text": "Loading packages.\n\nlibrary(ggplot2)\nlibrary(grid)\nlibrary(tidyverse)",
+    "crumbs": [
+      "Lab assignments",
+      "Lab2 - The `grid` Graphics System"
+    ]
+  },
+  {
+    "objectID": "labs/lab2_answer.html#question-1",
+    "href": "labs/lab2_answer.html#question-1",
+    "title": "Lab2 - The grid Graphics System",
+    "section": "Question 1",
+    "text": "Question 1\n\nyouthSex &lt;- table(youth$SEX)/nrow(youth)\nfemale &lt;- \"#E46C0A\"\nmale &lt;- \"#0070C0\"\n\nWe solve this task by creating a function for generating a grobTree using information from data. The function is made to help produce plots in questions 3, 5 and 8 as well (we need a grob(Tree) for the implementation in the challenge question 8).\n\nyouthSexData &lt;- as.data.frame(youthSex) %&gt;% \n  setNames(c(\"sex\", \"rate\"))\n\nbarRatio_grobTree &lt;- function(\n    data = youthSexData,\n    bar_height = unit(1, \"cm\"),\n    cols = list(female = female, male = male)) {\n  data &lt;- data %&gt;% \n    dplyr::mutate(\n      label = c(paste0(sex, \" \", round(rate * 100), \"%\"))\n    )\n  femaleData &lt;- data %&gt;% \n    dplyr::filter(sex == \"Female\")\n  maleData &lt;- data %&gt;% \n    dplyr::filter(sex == \"Male\")\n  \n  fbar &lt;- rectGrob(x = 0,\n                   hjust = 0,\n                   width = unit(femaleData$rate, \"npc\"),\n                   height = bar_height,\n                   gp = gpar(col = cols$female, fill = cols$female))\n  mbar &lt;- rectGrob(x = 1,\n                   hjust = 1,\n                   width = unit(maleData$rate, \"npc\"),\n                   height = bar_height,\n                   gp = gpar(col = cols$male, fill = cols$male))\n  \n  ftext &lt;- textGrob(x = unit(2, \"mm\"),\n                    label = femaleData$label,\n                    hjust = 0,\n                    gp = gpar(fontface = \"bold\"))\n  mtext &lt;- textGrob(x = unit(1, \"npc\") - unit(2, \"mm\"),\n                    label = maleData$label,\n                    hjust = 1,\n                    gp = gpar(fontface = \"bold\"))\n  \n  grobTree(fbar, mbar, ftext, mtext)\n}\n\nProduce the plot using the function.\n\ngrid.draw(barRatio_grobTree())",
+    "crumbs": [
+      "Lab assignments",
+      "Lab2 - The `grid` Graphics System"
+    ]
+  },
+  {
+    "objectID": "labs/lab2_answer.html#question-2",
+    "href": "labs/lab2_answer.html#question-2",
+    "title": "Lab2 - The grid Graphics System",
+    "section": "Question 2",
+    "text": "Question 2\nTo solve this task, we just use the barRatio_grobTree function inside a viewport of appropriate size.\n\npushViewport(viewport(width = unit(1, \"npc\") - unit(2, \"cm\")))\ngrid.draw(barRatio_grobTree())\nupViewport()",
+    "crumbs": [
+      "Lab assignments",
+      "Lab2 - The `grid` Graphics System"
+    ]
+  },
+  {
+    "objectID": "labs/lab2_answer.html#question-3",
+    "href": "labs/lab2_answer.html#question-3",
+    "title": "Lab2 - The grid Graphics System",
+    "section": "Question 3",
+    "text": "Question 3\nWe define a data set similar to in question 1 but in long format with a pair of rows for females and males for each year. We then create the plot using the barRatio_grobTree function defined in question 1 within appropriate viewports.\n\nyouthSexYear &lt;- t(apply(table(substr(youth$Date, 1, 4), youth$SEX), 1, \n                        function(x) x/sum(x)))\n\n## Creating data in long format\nyouthSexYearData &lt;- as.data.frame(t(youthSexYear)) %&gt;%\n  dplyr::mutate(sex = row.names(.)) %&gt;% \n  tidyr::pivot_longer(cols = num_range(prefix = \"\", range = 2014:2022),\n                      names_to = \"year\",\n                      values_to = \"rate\") %&gt;% \n  dplyr::arrange(desc(year)) %&gt;%\n  dplyr::mutate(id_year = dplyr::cur_group_id(), .by = year)\n\nplot9bars &lt;- function(data = youthSexYearData) {\n  id_years &lt;- unique(data$id_year)\n  num_years &lt;- length(id_years)\n  \n  grid.newpage()\n  pushViewport(\n    viewport(\n      layout = grid.layout(nrow = num_years),\n      width = unit(1, \"npc\") - unit(1, \"in\") - unit(1, \"cm\"),\n      x = unit(1, \"in\"),\n      height = unit(1, \"npc\") - unit(2, \"cm\"),\n      y = unit(1, \"cm\"),\n      just = c(\"left\", \"bottom\")\n    )\n  )\n  \n  for (i in id_years) {\n    data_1year &lt;- data %&gt;%\n      dplyr::filter(id_year == i)\n    bar &lt;- barRatio_grobTree(\n      data = data_1year,\n      bar_height = convertHeight(unit(.08, \"npc\"), \"inches\")\n    )\n    pushViewport(\n      viewport(\n        layout.pos.col=1, layout.pos.row=i\n      )\n    )\n    grid.draw(bar)\n    upViewport()\n  }\n  popViewport(0)\n  \n  pushViewport(\n    viewport(\n      layout = grid.layout(nrow = num_years),\n      width = unit(1, \"in\"),\n      x = unit(1, \"in\") - unit(2, \"mm\"),\n      height = unit(1, \"npc\") - unit(2, \"cm\"),\n      y = unit(1, \"cm\"),\n      just = c(\"right\", \"bottom\")\n    )\n  )\n  for (i in id_years) {\n    year &lt;- data %&gt;%\n      dplyr::filter(id_year == i) %&gt;% \n      dplyr::pull(year) %&gt;% \n      unique()\n    pushViewport(viewport(layout.pos.col=1, layout.pos.row=i))\n    grid.text(year, x = 1, hjust = 1)\n    upViewport()\n  }\n  popViewport(0)\n}\n\nGenerate plots with default and specified fig.height/width respectively, using the new plot9bars function.\n\nplot9bars()\n\n\n\n\n\n\n\n\n\nplot9bars()\n\n\n\n\n\n\n\n\nThis plot gives us information about our first question of interest about the ratio of female and male offenders across time. The bars show that the proportion of female offenders has been monotonically decreasing in the years 2018-2022, where the proportion of females went from 29% of offenders to 24%.",
+    "crumbs": [
+      "Lab assignments",
+      "Lab2 - The `grid` Graphics System"
+    ]
+  },
+  {
+    "objectID": "labs/lab2_answer.html#question-4",
+    "href": "labs/lab2_answer.html#question-4",
+    "title": "Lab2 - The grid Graphics System",
+    "section": "Question 4",
+    "text": "Question 4\nDefine the data given in the assignment.\n\nyouth$Abbrev &lt;- \n  gsub(\",\", \"\",\n       unlist(lapply(strsplit(as.character(youth$ANZSOC.Division), \" \"),\n                     function(x) x[1])))\nyouthTrendType &lt;- as.data.frame(table(youth$Date, youth$Abbrev))\nyouthTrendType$Date &lt;- as.Date(youthTrendType$Var1)\n## Order crime types\ntypes &lt;- table(youth$Abbrev)\nnewlevels &lt;- names(types)[order(types, decreasing=TRUE)]\nyouthTrendType$Type &lt;- factor(youthTrendType$Var2, levels=newlevels)\n\nabb &lt;- unique(youth[c(\"Abbrev\", \"ANZSOC.Division\")])\n\nWe create the facetted line plot using ggplot2.\n\nfacet_plot &lt;- function(data = youthTrendType, scales = \"fixed\", ...) {\n  data %&gt;% \n    ggplot(aes(x = Date, y = Freq, ...)) +\n    geom_line(show.legend = FALSE) +\n    facet_wrap(~ Type, scales = scales)\n}\nfacet_plot()\n\n\n\n\n\n\n\n\nThis plot tells nothing about gender differences in crime offence. However, the plot shows time trends for different crime types. It seems that for almost all types of crime, there is a downward trend in the frequency of offences. The only type of crime that is clearly not on a downward trend is the “Dangerous” (Dangerous or Negligent Acts Endangering Persons) crimes.\nHowever, this plot does have an issue since the facet_wrap uses scales = \"fixed\", meaning that the y-axis scale is the same for all crime types. This makes it hard to see what is happening with the crime types that are not as frequent as fx. theft. To investigate further, we could explore the use of scales = \"free\".",
+    "crumbs": [
+      "Lab assignments",
+      "Lab2 - The `grid` Graphics System"
+    ]
+  },
+  {
+    "objectID": "labs/lab2_answer.html#question-5",
+    "href": "labs/lab2_answer.html#question-5",
+    "title": "Lab2 - The grid Graphics System",
+    "section": "Question 5",
+    "text": "Question 5\nTo solve this exercise, we can simply create viewports to plot inside. We can assign the ggplot object as a value in our environment and then plot it inside the viewport with newpage = FALSE. Then, we can plot the bar with ratios on top. A viewport is not strictly necessary here, but makes the function I created earlier work with default behavior.\n\nfac &lt;- facet_plot()\npushViewport(\n  viewport(\n    height = unit(1, \"npc\") - unit(1, \"cm\"),\n    y = 0,\n    just = c(\"centre\", \"bottom\")\n  )\n)\nplot(fac, newpage = FALSE)\nupViewport()\n\npushViewport(\n  viewport(\n    height = unit(1, \"cm\"),\n    y = unit(1, \"npc\"),\n    just = c(\"centre\", \"top\")\n  )\n)\ngrid.draw(barRatio_grobTree())\nupViewport()",
+    "crumbs": [
+      "Lab assignments",
+      "Lab2 - The `grid` Graphics System"
+    ]
+  },
+  {
+    "objectID": "labs/lab2_answer.html#question-6",
+    "href": "labs/lab2_answer.html#question-6",
+    "title": "Lab2 - The grid Graphics System",
+    "section": "Question 6",
+    "text": "Question 6\nWe use the grid package to define a grob (graphical object) using the xGrob functions. In this case, we create a transparent blue box with rectGrob and then add it to each facet of the ggplot using the grid_panel function from gggrid, which adds the grob to each facet.\n\ntransBlueBox &lt;- rectGrob(\n  width = unit(.15, \"npc\"),\n  x = 1,\n  hjust = 1,\n  gp = gpar(col = male, fill = male, alpha = 0.35))\n\nfacet_plot() +\n  gggrid::grid_panel(transBlueBox)",
+    "crumbs": [
+      "Lab assignments",
+      "Lab2 - The `grid` Graphics System"
+    ]
+  },
+  {
+    "objectID": "labs/lab2_answer.html#question-7",
+    "href": "labs/lab2_answer.html#question-7",
+    "title": "Lab2 - The grid Graphics System",
+    "section": "Question 7",
+    "text": "Question 7\nTo solve this task, we can make use of the fact that gggrid::grid_panel can take a function producing a grob rather than a static grob as input. In this case, since we want to color the part of the graph from 2022, we create a data set consisting of only values from this period. We then create a function which creates a rectGrob as a function of input data, using ranges to define the size of the rectangle. We then input this function add_bar in gggrid::grid_panel, which uses the function within each panel. Thus, within each panel, data will consist of observation only from year 2022 and that type of crime. We can then simply find the ranges of the x- and y- values to define the area of the rectangle.\n\nyouthTrendType2022 &lt;- youthTrendType %&gt;% \n  dplyr::filter(lubridate::year(Date) &gt;= 2022)\n\nadd_bar &lt;- function(data, coords) {\n  max_y &lt;- max(coords$y)\n  min_y &lt;- min(coords$y)\n  \n  max_x &lt;- max(coords$x)\n  min_x &lt;- min(coords$x)\n  diff_x &lt;- max_x - min_x\n  \n  rectGrob(\n    x = min_x,\n    width = diff_x,\n    hjust = 0,\n    y = min(coords$y),\n    height = max_y - min_y,\n    vjust = 0,\n    gp = gpar(col = male, fill = male, alpha = .35)\n  )\n}\n\nfacet_plot() +\n  gggrid::grid_panel(add_bar,\n                     data = youthTrendType2022)\n\n\n\n\n\n\n\n\nThis plot, like in question 4 and 6 does not help us answer questions regarding gender differences in offending. In question 4 we discussed how the plot can be used to identify a downward trend over time for most crime types except for “Dangerous” (Dangerous or Negligent Acts Endangering Persons) crimes.\nThis plot however highlights data from year 2022, which makes us notice an upward trend in data from this year alone for all crime types. This is something that was not easily “catchable” in the plot from question 4. So this plot does help us understand what is happening from year 2022 and onward.\nThe plot still suffers from the fact that not-so-frequent crime types are hard to see, so below I have made the same plot but with scales = \"free_y\" to better be able to investigate the low-frequency crime types.\n\nfacet_plot(scales = \"free_y\") +\n  gggrid::grid_panel(add_bar,\n                     data = youthTrendType2022)\n\n\n\n\n\n\n\n\nThis plot shows that even for the low-frequency crime types there is the same downward trend in most of data but with a small increase from year 2022 and onwards.",
+    "crumbs": [
+      "Lab assignments",
+      "Lab2 - The `grid` Graphics System"
+    ]
+  },
+  {
+    "objectID": "labs/lab2_answer.html#challenge",
+    "href": "labs/lab2_answer.html#challenge",
+    "title": "Lab2 - The grid Graphics System",
+    "section": "Challenge",
+    "text": "Challenge\nDefine data as in assignment to use for plot:\n\nyouthTrendTypeSex &lt;- as.data.frame(table(youth$Date, youth$Abbrev,\n                                         youth$SEX))\nyouthTrendTypeSex$Date &lt;- as.Date(youthTrendTypeSex$Var1)\nyouthTrendTypeSex$Type &lt;- factor(youthTrendTypeSex$Var2, levels=newlevels)\nyouthTrendTypeSex$Sex &lt;- factor(youthTrendTypeSex$Var3)\n\nLike in question 7, we create a function with arguments data and coords that we input to gggrid::grid_panel. In this case, we create a summary of the proportion of female and male offenders within each panel (crime type) and use these summaries to create bars on the right to visualise this. We also add white horizontal lines at break points 0.1 to 0.5 to make it more easy to see the distribution of men vs. women in each panel.\nTo create such a collection of grobs (2 rectangles to form the bar with proportions and a segment with white lines), we use the gTree function and specify all 3 grobs as children using a gList.\nTo also add a bar with the overall proportions to the right of the plot, we simply utilise viewports as in question 5, but now using the angle argument to create a vertical bar. We also extract the colors used as a default from ggplot to color our groups and use them for our bar.\n\nadd_rate &lt;- function(data, coords) {\n  rateData &lt;- data %&gt;%\n    summarise(offences = sum(y), .by = colour) %&gt;%\n    mutate(rate = offences / sum(offences))\n  \n  bar1 &lt;- rectGrob(\n    x = 1,\n    width = unit(1, \"mm\"),\n    hjust = 1,\n    y = 0,\n    height = rateData[1, ]$rate,\n    vjust = 0,\n    gp = gpar(col = rateData[1, ]$colour,\n              fill = rateData[1, ]$colour)\n  )\n  bar2 &lt;- rectGrob(\n    x = 1,\n    width = unit(1, \"mm\"),\n    hjust = 1,\n    y = 1,\n    height = rateData[2, ]$rate,\n    vjust = 1,\n    gp = gpar(col = rateData[2, ]$colour,\n              fill = rateData[2, ]$colour)\n  )\n  lines &lt;- segmentsGrob(x0 = unit(1, \"npc\"), x1 = unit(1, \"npc\") - unit(1, \"mm\"),\n                        y0 = seq(0.1, 0.5, 0.1), y1 = seq(0.1, 0.5, 0.1),\n                        gp = gpar(col = \"white\", fill = \"white\"))\n  gTree(children = gList(bar1, bar2, lines))\n}\n\nsexFacetPlot &lt;- function(data = youthTrendTypeSex, scales = \"fixed\") {\n  grid.newpage()\n  p &lt;- facet_plot(data = data,\n                  color = Sex,\n                  scales = scales) +\n    gggrid::grid_panel(add_rate)\n  \n  pushViewport(\n    viewport(\n      x = 0,\n      just = c(0, .5),\n      width = unit(.9, \"npc\")\n    )\n  )\n  plot(p, newpage = FALSE)\n  upViewport()\n  \n  cols_in_plot &lt;- scales::pal_hue()(2)\n  cols_as_list &lt;- as.list(cols_in_plot) %&gt;% setNames(c(\"female\", \"male\"))\n  \n  pushViewport(\n    viewport(\n      x = unit(1, \"npc\") - unit(.1, \"npc\") / 2,\n      height = unit(.1, \"npc\"),\n      width = convertUnit(\n        unit(0.7, \"npc\"),\n        unitTo = \"in\",\n        axisFrom = \"y\",\n        axisTo = \"x\"),\n      angle = 90\n    )\n  )\n  grid.draw(barRatio_grobTree(cols = cols_as_list,\n                             bar_height = unit(6.5, \"mm\")))\n  upViewport()\n}\n\nUse the new function to create the plot:\n\nsexFacetPlot()\n\n\n\n\n\n\n\n\nThis plot now helps us answer all questions of interest. Again, using free scales in the facets, I think we gain more insight in what is happening:\n\nsexFacetPlot(scales = \"free_y\")",
+    "crumbs": [
+      "Lab assignments",
+      "Lab2 - The `grid` Graphics System"
+    ]
+  },
+  {
+    "objectID": "labs/lab2_answer.html#the-grid-package",
+    "href": "labs/lab2_answer.html#the-grid-package",
+    "title": "Lab2 - The grid Graphics System",
+    "section": "The grid package",
+    "text": "The grid package\nThe grid package allows total customisation in creating grobs (graphical objects). They can either be drawn directly using grid::grid.xx functions or created as grobs with grid::xxGrob functions to be drawn later (with grid::grid.draw). This enables us to gather different grobs in a grob tree with grid::gTree and specifying grobs with a grid::gList as the children argument (alternatively use grid::grobTree when all components are grobs). See more in question 1.\n\nUsing viewports\nWe can use grid::viewport with grid::pushViewport to draw whatever we want inside a certain area of our “full plotting area” and then go to a parent viewport with grid::upViewport (grid::popViewport navigates to parent viewport AND deletes the current viewport from the viewport tree). See questions 2, 3, 5 and 8.\nAdditional takeaways about viewports:\n\nNote this also works with ggplot2 by assigning the ggplot object a value (fx. p) and then plotting it “inside the viewport” with plot(p, newpage = FALSE). See questions 5 and 8.\nWe can use the grid::convertUnit function to change the axis we are referencing (useful fx. when creating a viewport with angle = 90/270). See question 8.\nA strong way of using viewports is using xscale and/or yscale parameters in the grid::viewport function and the using the grid::unit function with units = \"native\" specified to make your grobs relate to the scale of the viewport.\nUse of grid::grid.layout as in question 3 can help with many situations.\n\nNote that ggplot2 is built on grid. ggplot2 uses viewports from grid. Fx. on a simple plot, it uses (nested) viewports for the background, axis text, axis ticks, etc. etc.",
+    "crumbs": [
+      "Lab assignments",
+      "Lab2 - The `grid` Graphics System"
+    ]
+  },
+  {
+    "objectID": "labs/lab2_answer.html#combining-grid-and-ggplot2---the-gggrid-package",
+    "href": "labs/lab2_answer.html#combining-grid-and-ggplot2---the-gggrid-package",
+    "title": "Lab2 - The grid Graphics System",
+    "section": "Combining grid and ggplot2 - The gggrid package",
+    "text": "Combining grid and ggplot2 - The gggrid package\nAs mentioned above, viewports and ggplots integrate nicely using just grid and ggplot2. However, it’s easy to combine elements of grid to ggplots to create overlays on each facet/panel with gggrid::grid_panel or for each group using gggrid::grid_group.\nThese functions either take a static grob or a function that will create a grob (or a tree of grobs) within each panel/group. The function takes data and coords as an argument, and it will then use this function to draw using the function on only the data in that panel (stratified data). Note that the coords are transformed values of x and y (from the aesthetic mapping) to scale 0-1, so it can be plotted correctly in the scale of the viewport. data contains the untransformed data and includes columns of other aesthetics (fx. colour).\nSee more in questions 6, 7 and 8.",
+    "crumbs": [
+      "Lab assignments",
+      "Lab2 - The `grid` Graphics System"
+    ]
+  },
+  {
+    "objectID": "labs/lab2_answer.html#answering-questions-of-interest",
+    "href": "labs/lab2_answer.html#answering-questions-of-interest",
+    "title": "Lab2 - The grid Graphics System",
+    "section": "Answering questions of interest",
+    "text": "Answering questions of interest\nThe proportion of female vs. male offenders is on a downward trend with the proportion of female offenders monotonically decreasing from 29% in 2018 to 24% in 2022, which is visible from the plot in question 3.\nFrom question 4 (and 5) we see an overall downward in frequency of offences. We do however see an increase for a single crime type “Dangerous” (Dangerous or Negligent Acts Endangering Persons). Looking at the plot in question 6, it becomes apparent that across all crime types, there seems to be an increase from the start of 2022. This is further highlighted in question 7, where we use a more precise, data-driven method to show the increase from start of year 2022.\nLooking at the plot from the challenge, we can comment on some of the same things as in the other plots, but those plots are more “specific” and perhaps a bit better at answering each question. This plot however gives an overview of both the proportion of female vs. male offenders through time as well as overall frequency across time and crime types. The plot also provides information not previously available by showing the proportions for each crime type.",
+    "crumbs": [
+      "Lab assignments",
+      "Lab2 - The `grid` Graphics System"
+    ]
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Miscellaneous notes about R added as I stumble upon it",
+    "section": "",
+    "text": "This Quarto website is home to assignment lab answers in the course STATS 787: Data Visualisation at UoA (University of Auckland) held by the author of the grid package Paul Murrell.\n\n\n\n Back to top"
+  },
+  {
+    "objectID": "labs/lab1_answer.html",
+    "href": "labs/lab1_answer.html",
+    "title": "Lab1 - Grammar of Graphics",
+    "section": "",
+    "text": "Loading packages.\nlibrary(ggplot2)\nlibrary(tidyverse)",
+    "crumbs": [
+      "Lab assignments",
+      "Lab1 - Grammar of Graphics"
+    ]
+  },
+  {
+    "objectID": "labs/lab1_answer.html#question-1",
+    "href": "labs/lab1_answer.html#question-1",
+    "title": "Lab1 - Grammar of Graphics",
+    "section": "Question 1",
+    "text": "Question 1\nWe create the bar plot below by using the geom_bar geom function to create a summary statistic of counts of the variable Age.Lower (geom_bar uses the stat stat_count behind the scenes to create the summary), which we use as out x in our aesthetic mapping for the plot. Note that we set the just argument to 0 to ensure a left-alignment of the bars (default is 0.5, which centers the bars).\n\ncrime %&gt;% \n  ggplot(aes(x = Age.Lower)) +\n  geom_bar(just = 0)\n\n\n\n\n\n\n\n\nThis plot has substantive issues in answering our questions of trend over time as well as differences between males and females as information about time and gender is not in the plot. However, the bar plot does show that the highest number of incidents across all values of a lower bound of a 5-year age band of the offender, is among incidents with a lower age band of 15 years. There are also quite a few incidents with a lower bound of 10 years, which seems to match the frequency of incidents corresponding to a lower limit of 50 years. Thus, youth offending is occurring frequently, but by accumulating the adult incidents, we see that adult offending is in general more frequent than youth offending.",
+    "crumbs": [
+      "Lab assignments",
+      "Lab1 - Grammar of Graphics"
+    ]
+  },
+  {
+    "objectID": "labs/lab1_answer.html#question-2",
+    "href": "labs/lab1_answer.html#question-2",
+    "title": "Lab1 - Grammar of Graphics",
+    "section": "Question 2",
+    "text": "Question 2\nDoing the summary statistic of count across the different lower limits ourselves in data and then plotting, we use geom geom_col, which utilises the stat stat_identity with aesthetic mapping of x being Var1 (our lower bound of ages) and y being Freq (our frequency of incidents for the corresponding lower bound of age).\n\ncrimeTab &lt;- as.data.frame(table(crime$Age.Lower))\ncrimeTab %&gt;% \n  ggplot(aes(x = Var1, y = Freq)) +\n  geom_col(just = 0)",
+    "crumbs": [
+      "Lab assignments",
+      "Lab1 - Grammar of Graphics"
+    ]
+  },
+  {
+    "objectID": "labs/lab1_answer.html#question-3",
+    "href": "labs/lab1_answer.html#question-3",
+    "title": "Lab1 - Grammar of Graphics",
+    "section": "Question 3",
+    "text": "Question 3\nWe create the plot as we did in question 1 with geom_bar geom function (which uses stat_count as stat) with aesthetic mapping of Age.Lower as our x. However, in this case, we add aesthetic mappings of fill = SEX, which fills the bars with colors based on the observations’ value of SEX in the data set. The default value of position in geom_bar is \"stack\", so by the default behavior of the geom, we produce this stacked plot.\n\ncrime %&gt;% \n  ggplot(aes(x = Age.Lower, fill = SEX)) +\n  geom_bar(just = 0)\n\n\n\n\n\n\n\n\nThis new plot does not provide new information in regards to our question of youth vs. adult offending, compared to the plot in question 1, so we could say all the same to that question. The time trend question is still not answerable by this plot due to the substantive issue of missing information about time.\nHowever, this plot does help us get an idea of differences between female and male offenders. The plot shows immediately that there are more male offenders than female offenders. It looks like the ratio is quite similar across different lower bounds of age, though it’s hard to judge whether this is exactly or just approximately correct from this plot.",
+    "crumbs": [
+      "Lab assignments",
+      "Lab1 - Grammar of Graphics"
+    ]
+  },
+  {
+    "objectID": "labs/lab1_answer.html#question-4",
+    "href": "labs/lab1_answer.html#question-4",
+    "title": "Lab1 - Grammar of Graphics",
+    "section": "Question 4",
+    "text": "Question 4\n\ncrime %&gt;% \n  ggplot(aes(x = Age.Lower, fill = SEX)) +\n  geom_bar(just = 0, position = \"dodge\")\n\n\n\n\n\n\n\ncrime %&gt;% \n  ggplot(aes(x = Age.Lower, fill = SEX)) +\n  geom_bar(just = 0, position = \"identity\")\n\n\n\n\n\n\n\ncrime %&gt;% \n  ggplot(aes(x = Age.Lower, fill = SEX)) +\n  geom_bar(just = 0, position = \"fill\")\n\n\n\n\n\n\n\n\nThe plot with position = \"fill\" cannot help us answer the question about youth vs. adult offending (or the time trend). However, it does a great job at trying to answer the question about differences between male and female offending, as it is essentially plotting the ratio of male and female offenders as its response on the y-axis. For the plot in question 3, I said it looked like the ratio was approximately the same across different lower bounds of age. This plot shows more clearly that the ratios are quite similar, but there are subtle differences. The biggest difference is seen from the very lowest ages, where a higher proportion of males is present, which takes a big drop at lower bound of age 10.\nThe plot with position = \"dodge\" shows incidence rates individually for each combination of gender and lower bound of age, compared to the position = \"stack\", which showed cumulative incidence rates within age groups. In my opinion, position = \"stack\" does a better job of answering the question of youth vs. adult offending by providing cumulative rates while still giving an idea of gender differences, and the position = \"fill\" plot does a better job of answering the question about gender differences.\nThe plot with position = \"identity\" does not provide any position adjustment, thus positioning the bar for females behind the bar for males, thus making the plot not provide any information about gender differences, though that was the whole point of coloring the bars by gender. Biggest possible substantive issue in answering the question of gender differences; no information is available.",
+    "crumbs": [
+      "Lab assignments",
+      "Lab1 - Grammar of Graphics"
+    ]
+  },
+  {
+    "objectID": "labs/lab1_answer.html#question-5",
+    "href": "labs/lab1_answer.html#question-5",
+    "title": "Lab1 - Grammar of Graphics",
+    "section": "Question 5",
+    "text": "Question 5\nTo create a line plot, we can use the geom_line geom. We use the stat_identity stat to display the data as is, as we have already ourselves created the summary statistic of frequency across time that we are interested in. Thus, we just use aesthetic mappings of x = Date and y = Freq to plot the values in data.\n\ncrimeTrend &lt;- as.data.frame(table(crime$Date))\ncrimeTrend$Date &lt;- as.Date(crimeTrend$Var1)\n\ncrimeTrend %&gt;% \n  ggplot(aes(x = Date, y = Freq)) +\n  geom_line()\n\n\n\n\n\n\n\n\nThis plot has substantive issues in answering the questions we previously discussed, as it does not contain information on age or gender. However, it can be used to answer the question about time trend. The plot shows that there has been an overall downwards trend in incidence rates of crime from 2014 to 2022 with natural variability in data. However, we do notice some peaks that seem to have larger variance than other places in data during year 2016 and at the start of 2020. Furthermore, the downwards trend seems to reverse at the start of 2022, with incidence rates that seem to start increasing.",
+    "crumbs": [
+      "Lab assignments",
+      "Lab1 - Grammar of Graphics"
+    ]
+  },
+  {
+    "objectID": "labs/lab1_answer.html#question-6",
+    "href": "labs/lab1_answer.html#question-6",
+    "title": "Lab1 - Grammar of Graphics",
+    "section": "Question 6",
+    "text": "Question 6\nWe use the geom_line geom with stat_identity stat and with aesthetic mappings of x = Date, y = Freq, color = Var2 and linewidth = 1.4. Note however that we use the aesthetic linewidth outside aes() because it is not associated with any variable but rather we just want to change it statically for all lines in the plot. If we wished to change the linewidth for different values of SEX, we could put it inside aes(). Note also that we change the default colors assigned to the different gender by using scale_color_manual to tell exactly what colors we would like for the different values.\n\ncrimeTrendSex &lt;- as.data.frame(table(crime$Date, crime$SEX))\ncrimeTrendSex$Date &lt;- as.Date(crimeTrendSex$Var1)\n\ncrimeTrendSex %&gt;% \n  ggplot(aes(x = Date, y = Freq, color = Var2)) +\n  geom_line(linewidth = 1.4) +\n  scale_color_manual(values = c(Female = \"pink\", Male = 4))\n\n\n\n\n\n\n\n\nThe plot shows the exact same as we commented in the previous question about the time trend. Overall a downward trend is seen with some larger peaks in a couple location, and a sudden rise in incidence is seen from the start of 2022.\nThis plot, however, can also help answer the question about gender differences, as we can see from the plot that there are quite a few more male offenders than female offenders. It does a good job if trying to answer a questions specific to absolute incidence rates for males and females across years. If seeking to answer a question about the ratio of female and male offenders, a new response variable consisting of this ratio and plotting against time would be benefitial.",
+    "crumbs": [
+      "Lab assignments",
+      "Lab1 - Grammar of Graphics"
+    ]
+  },
+  {
+    "objectID": "labs/lab1_answer.html#question-7",
+    "href": "labs/lab1_answer.html#question-7",
+    "title": "Lab1 - Grammar of Graphics",
+    "section": "Question 7",
+    "text": "Question 7\nWe use the geom_line geom with stat_identity stat and with aesthetic mappings of x = Date, y = Freq, group = Age, color = Age and linewidth = 1. The use of group = Age is to ensure that only points inside each group are connected to form a line. Without this aesthetic mapping, the plot would be a complete mess (more than it is…)\n\ncrimeTrendAge &lt;- as.data.frame(table(crime$Date, crime$Age.Lower))\ncrimeTrendAge$Date &lt;- as.Date(crimeTrendAge$Var1)\ncrimeTrendAge$Age &lt;- as.numeric(as.character(crimeTrendAge$Var2))\n\ncrimeTrendAge %&gt;% \n  ggplot(aes(x = Date, y = Freq, group = Age, color = Age)) +\n  geom_line(linewidth = 1)\n\n\n\n\n\n\n\n\nIn my opinion, this plot does a bad job of trying to answer any of the questions. It tries to help answer the question about trend over time while trying to show differences between youth and adult offending. However, the plot is trying too much, leading the reader unable to derive any meaning from it.\nIt’s possible to sense a form of downward trend over time, but it’s hard to see and is much better answered using one of the previous plots. In regards to youth vs. adult offending, the reader is unable to identify the age corresponding to a color due to the small difference in colors between many groups, possibly creating perceptual issues as a color might seem darker or lighter than it actually is if surrounded by a color on the “opposite side”.",
+    "crumbs": [
+      "Lab assignments",
+      "Lab1 - Grammar of Graphics"
+    ]
+  },
+  {
+    "objectID": "labs/lab1_answer.html#question-8",
+    "href": "labs/lab1_answer.html#question-8",
+    "title": "Lab1 - Grammar of Graphics",
+    "section": "Question 8",
+    "text": "Question 8\nThe geom is again geom_line with stat stat_identityand x = Date, y = Freq and linewidth = 1 as aesthetic mappings and facet by values of Age.\n\ncrimeTrendAge %&gt;% \n  ggplot(aes(x = Date, y = Freq)) +\n  geom_line(linewidth = 1) +\n  facet_wrap(~ Age)\n\n\n\n\n\n\n\n\nThis plot helps us answer a question of trends over time of youth vs. adult offending. So the plot does not help answering the “overall/general/individual” questions posed at the start but rather helps answer this “combined question”. On previous plots we saw a downward trend across time, and we saw the highest frequency of incidents for the age group with lower bound of 15 years.\nThis plot shows that the downward trend is actually more dramatic for this specific age group that showed the highest incidence. Other age groups also show a downward trend, but much more slightly, and it thus looks like the downward trend overall is dominated by the downward trend of younger groups.",
+    "crumbs": [
+      "Lab assignments",
+      "Lab1 - Grammar of Graphics"
+    ]
+  },
+  {
+    "objectID": "labs/lab1_answer.html#question-9",
+    "href": "labs/lab1_answer.html#question-9",
+    "title": "Lab1 - Grammar of Graphics",
+    "section": "Question 9",
+    "text": "Question 9\nThis plot is created as in question 1 but with facets on the new Year variable. That is, we use geom_bar as the geom (with stat_count as the stat) and aesthetic mapping of x = Age.Lower.\n\ncrime$Year &lt;- as.POSIXlt(crime$Date)$year + 1900\n\ncrime %&gt;% \n  ggplot(aes(x = Age.Lower)) +\n  geom_bar(just = 0) +\n  facet_wrap(~ Year)\n\n\n\n\n\n\n\n\nThe plot helps answer the same question as the previous question, i.e. trend over time of offending across age groups. The plot supports our explanation from above, seeing that youth offending is on a more dramatic downward trend compared to the older age groups. This is the main strength of the plot. We can also see that the overall frequency is decreasing, but other plots have been better at showing that.",
+    "crumbs": [
+      "Lab assignments",
+      "Lab1 - Grammar of Graphics"
+    ]
+  },
+  {
+    "objectID": "labs/lab1_answer.html#question-10",
+    "href": "labs/lab1_answer.html#question-10",
+    "title": "Lab1 - Grammar of Graphics",
+    "section": "Question 10",
+    "text": "Question 10\nI notice this plot does a reordering of the levels of the factor with divisions, ensures line break in the legend, removes text, ticks and titles from the x- and y-axis to increase the data-to-ink ratio and manual choosing of colors to make neighboring groups more distinct than the default color choice.\n\ncrimeTrendDivision &lt;- as.data.frame(table(crime$Age.Lower, crime$ANZSOC.Division))\ncrimeTrendDivision$Age &lt;- crimeTrendDivision$Var1\ncrimeTrendDivision$Division &lt;- stringr::str_wrap(crimeTrendDivision$Var2, 30)\n\nord_div &lt;- crimeTrendDivision %&gt;% \n  dplyr::filter(Age == 15) %&gt;% \n  dplyr::arrange(desc(Freq)) %&gt;% \n  dplyr::pull(Division) %&gt;% \n  as.character()\ncrimeTrendDivision$ANZSOC.Division &lt;- factor(crimeTrendDivision$Division,\n                                              levels = ord_div)\ncolors &lt;- rep(as.character(paletteer::paletteer_d(\"ggthemes::colorblind\")), 2) %&gt;% \n  setNames(levels(crimeTrendDivision$ANZSOC.Division))\n\ncrimeTrendDivision %&gt;% \n  ggplot(aes(x = ANZSOC.Division, y = Freq,\n             group = ANZSOC.Division, fill = ANZSOC.Division)) +\n  geom_col(just = 0, position = \"dodge\") +\n  facet_wrap(~ Age) +\n  scale_fill_manual(values = colors) +\n  theme(axis.text = element_blank(),\n        axis.ticks = element_blank(),\n        axis.title = element_blank(),\n        legend.key.width = unit(0.3, \"cm\"),\n        legend.key.height = unit(0.9, \"cm\"),\n        legend.key.spacing.y = unit(0.1, \"cm\"),\n        legend.text = element_text(size = 8))",
+    "crumbs": [
+      "Lab assignments",
+      "Lab1 - Grammar of Graphics"
+    ]
+  }
+]
