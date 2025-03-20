@@ -1,0 +1,1 @@
+This Quarto website is home to assignment lab answers in the course [STATS 787: Data Visualisation](https://courseoutline.auckland.ac.nz/dco/course/STATS/787/1213) at UoA (University of Auckland) held by the author of the `grid` package Paul Murrell.
