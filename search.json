@@ -1,5 +1,221 @@
 [
   {
+    "objectID": "labs/lab3_answer.html",
+    "href": "labs/lab3_answer.html",
+    "title": "Lab3 - Effective Data Visualisations",
+    "section": "",
+    "text": "Loading packages.\nlibrary(tidyverse)",
+    "crumbs": [
+      "Lab assignments",
+      "Lab3 - Effective Data Visualisations"
+    ]
+  },
+  {
+    "objectID": "labs/lab3_answer.html#questions-of-interest",
+    "href": "labs/lab3_answer.html#questions-of-interest",
+    "title": "Lab3 - Effective Data Visualisations",
+    "section": "Questions of interest",
+    "text": "Questions of interest\nWe want to investigate the distribution of incidents of each crime type across age groups.\nWe want to investigate what types of crime are most common and how distributions of age groups compare between crime types.",
+    "crumbs": [
+      "Lab assignments",
+      "Lab3 - Effective Data Visualisations"
+    ]
+  },
+  {
+    "objectID": "labs/lab3_answer.html#question-1",
+    "href": "labs/lab3_answer.html#question-1",
+    "title": "Lab3 - Effective Data Visualisations",
+    "section": "Question 1",
+    "text": "Question 1\n\nggplot(crimeAgeType) +\n  geom_col(aes(Age, Freq, color=Var2, fill=Var2), position=\"identity\",\n           just=0)\n\n\n\n\n\n\n\n\nAnswering all our questions of interest from this plot is quite difficult.\nCommenting on what types of crime are the most common, it’s hard to give a general answer due to the breakdown on age groups. Trying to comment on the most common types of crimes within each age group is, however, also difficult. It’s hard to distinguish the categories apart based on the colors. If we were able to distinguish the categories, the use of position = \"identity\" means the bars are placed “in front” of each other, meaning we could see the most frequent crime type by identifying the color of the tallest bar. This way of displaying the data, however, gives many problems.\nTrying to investigate the distribution of crime types across age groups, the same problems as described above apply. Colors and positions of bars makes it very difficult to see what is going on from the plot. However, we can sort of make out a distribution for each crime type by seeing “sub-histograms” in each color. All distributions look to be unimodal with peaks that differ a bit between age groups from 15-19 to 25-29.\n\nOverplotting is an issue in this plot, as the bars in the plot is overlapping. One might think initially that this plot is showing stacked bars, but actually the bars are “blocking” each other. Fx. by inspecting data, we know that there are observations of type “Theft and Related Offences” in age groups 20-24, but this is not at all shown, as the “previous” crime type by order of our factor variable is taller and thus hiding it completely. This makes it impossible to answer any questions regarding the distribution of crime types, as the plot has substantive issues with representing the data.\nColour use is horrible to say the least. In the reading by Wilke, he writes: “As a rule of thumb, qualitative color scales work best when there are three to five different categories that need to be colored. Once we reach eight to ten different categories or more, the task of matching colors to categories becomes too burdensome to be useful, even if the colors remain sufficiently different to be distinguishable in principle.”. Here, we are coloring a variable with 16 levels, overstepping the guideline by Wilke massively. At the same time, the color scale does not effectively enable us to distinguish the categories. Practically, this makes the plot almost entirely unusable as a tool in answering the questions of interest.\nText labels on the histogram are okay. “Freq” or “Count” are standard for histograms, and one could add “Age (years)” to the x-axis title to have the unit. However, an argument could be made that this is not necessary as it is clear from the context that age is measured in years. On the other hand, the legend title and labels need some work. The legend title of “Var2” is non-informative, and it actually inhibits us from answering questions of interest. The reader might be able to deduce it has something to do with crime type from the values of the variable, but the reader will not be certain what they are seeing. The legend labels could be formatted nicer with line breaks. Unless figure width is scaled up, it makes the figure harder to see and thus harder to interpret.\nThe principal of proportional ink is not satisfied in this plot. The height of each bar does not encode the frequency of that crime but rather the difference from the “previous” crime type. As noted earlier, in some cases, data is even “hidden” behind other bars.",
+    "crumbs": [
+      "Lab assignments",
+      "Lab3 - Effective Data Visualisations"
+    ]
+  },
+  {
+    "objectID": "labs/lab3_answer.html#question-2",
+    "href": "labs/lab3_answer.html#question-2",
+    "title": "Lab3 - Effective Data Visualisations",
+    "section": "Question 2",
+    "text": "Question 2\nTo introduce semitransparency, I specify the alpha argument in geom_col.\n\nggplot(crimeAgeType) +\n  geom_col(aes(Age, Freq, color=Var2, fill=Var2), position=\"identity\",\n           just=0, alpha = .3)\n\n\n\n\n\n\n\n\nThis has not helped the visualisation at all. The plot is even more confusing, as the colors are harder to distinguish from each other. The point of this plot would be to make the bars “hiding” behind others visible, but in this case the bar is a mix of all the colors and not identifiable anyway.\nTo introduce “jitter” in the data, I use position = \"dodge\" which uses position_dodge to make horizontal adjustment of bars within groups. Using position = \"jitter\" in this case creates chaos.\n\nggplot(crimeAgeType) +\n  geom_col(aes(Age, Freq, color=Var2, fill=Var2), position=\"dodge\")\n\n\n\n\n\n\n\n\nThis plot helps us identify a bar for each crime type rather than having some hidden behind each other. This does improve the plot’s ability to help us answer our questions of interest regarding the distribution of crime types across age groups. However, the plot still suffers from problems with colors, and the bars in this plot are so thin that it makes it really hard to see them.\nTo create a plot with another geom, we create a line plot. Changing only one “parameter” at a time, we would keep position = \"idenity\" in an area plot, which leads to exactly the same issue as with the bars where some of the area of some categories would hide behind other categories (though it would be a bit more clear that is what is happening with area than bars).\nWe create the line plot by simply changing the geom to geom_line and making sure to remove fill as an aesthetic as that is not used for line plots.\n\nggplot(crimeAgeType) +\n  geom_line(aes(Age, Freq, color=Var2))\n\n\n\n\n\n\n\n\nThe line plot does help answer the questions of interest. As noted above where we used position = \"dodge\", categories are no longer hidden behind other. Furthermore, due to the amount of bars in the previous plot which made it difficult to see, I would judge this plot to be the best at answering both questions of interest in regards to the most common crime type as well as distribution of crime type across age groups. Though it’s definitely still not good…",
+    "crumbs": [
+      "Lab assignments",
+      "Lab3 - Effective Data Visualisations"
+    ]
+  },
+  {
+    "objectID": "labs/lab3_answer.html#question-3",
+    "href": "labs/lab3_answer.html#question-3",
+    "title": "Lab3 - Effective Data Visualisations",
+    "section": "Question 3",
+    "text": "Question 3\nFirst, I make sure to create ANZSOC.Division as a factor using the newlabels defined in the assignment, which makes sure to create line breaks every 30 characters and makes all crime types take up 3 lines of text, so they are all top-aligned. With this new variable in data, I re-create crimeAgeType.\nIn my plotting code, I simply label the aesthetics that are used for the legend using the labs function to label both color and fill as “Crime type”. I also add the unit “years” to my x-axis title as well as added a title, which I made bold and with bigger size using the argument plot.title in the theme function.\n\ncrime$ANZSOC.Division &lt;- factor(\n  crime$ANZSOC.Division,\n  levels=newlevels,\n  labels = newlabels\n  )\n\ncrimeAgeType &lt;- as.data.frame(table(crime$Age.Lower, crime$ANZSOC.Division))\ncrimeAgeType$Age &lt;- as.numeric(as.character(crimeAgeType$Var1))\ncrimeAgeType$Crime &lt;- crimeAgeType$Var2\n\nggplot(crimeAgeType) +\n  geom_histogram(aes(x = Age))\n\n`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.\n\n\n\n\n\n\n\n\nggplot(crimeAgeType) +\n  geom_col(aes(Age, Freq, color=Crime, fill=Crime), position=\"identity\",\n           just=0) +\n  theme(plot.title = element_text(face = \"bold\", size = 18)) +\n  labs(x = \"Age (years)\", title = \"Criminal offending in New Zealand (2014-2022)\",\n       color = \"Crime type\", fill = \"Crime type\")\n\n\n\n\n\n\n\n\nThe plot now has a title, which according to Wilke should be at the top of the plot when creating a standalone figure, or as the first thing in the caption of a figure. The x-axis provides a unit to remove all doubt. The legend is now much more clear, as we provide information about what the grouping variable is in the title, and the line breaks in the keys make then easier to read and give more room to the figure.\nThis modification does help understand what data is being displayed better, meaning it would be easier to try and interpret it and answer questions of interest. However, only marginally as the plot still has substantive problems in answering questions of interest due to the issues mentioned in question 1.",
+    "crumbs": [
+      "Lab assignments",
+      "Lab3 - Effective Data Visualisations"
+    ]
+  },
+  {
+    "objectID": "labs/lab3_answer.html#question-4",
+    "href": "labs/lab3_answer.html#question-4",
+    "title": "Lab3 - Effective Data Visualisations",
+    "section": "Question 4",
+    "text": "Question 4\nIn the plot we use facet_wrap to create a plot with small multiples with facets for each crime type. In addition to this, we remove the coloring on crime type, as it is redundant now that we have facets for each crime type. This is in accordance with Wilkes guidelines in section 19.1 where he notes that:\n\n“A second common problem is coloring for the sake of coloring, without having a clear purpose for the colors.”\n\n\nggplot(crimeAgeType) +\n  geom_col(aes(Age, Freq), just=0, fill = \"dodgerblue\") +\n  facet_wrap(~ Crime) +\n  theme(plot.title = element_text(face = \"bold\", size = 18)) +\n  labs(x = \"Age (years)\", title = \"Criminal offending in New Zealand (2014-2022)\") +\n  theme(strip.text = element_text(hjust = 0))\n\n\n\n\n\n\n\n\nAnswering the question about most common type of crime is actually not that easy to do from this plot. The plot is still better than the previous plots, and we have made sure to satisfy the principle of proportional ink by making sure that bars start from 0 and that we have the same scale for all the facets. However, it can still be difficult to fx. whether the overall frequency of “Theft…” or “Traffic…” is highest.\nCommenting on individual distributions of crime types is much easier. We clearly see unimodal distributions for all crime types that are quite heavily right-skewed. The mode is not the exact same for all, as it ranges from being at 15-19 years to either 25-29 or 30-34 for some distributions (though it’s hard to see exactly what is the peak).",
+    "crumbs": [
+      "Lab assignments",
+      "Lab3 - Effective Data Visualisations"
+    ]
+  },
+  {
+    "objectID": "labs/lab3_answer.html#question-5",
+    "href": "labs/lab3_answer.html#question-5",
+    "title": "Lab3 - Effective Data Visualisations",
+    "section": "Question 5",
+    "text": "Question 5\nIn order to maximise the data-ink ratio, we should remove any ink that does not show or explain data. Thus, we\n\nRemove the grey background of the facet title strips using strip.background in ggplot2::theme.\nRemove all background from the plot using a combination of ggplot2::theme_minimal and the panel.grid argument in ggplot2::theme.\nChange the histogram to use a ggplot2::geom_segment, which only draws the top of the bars. This is the biggest ink saver, and it allows us to visually see the data value from the placement of the bar without needing the area of a bar to judge data values.\n\n\nggplot(crimeAgeType) +\n  geom_segment(aes(x = Age, y = Freq, xend = Age + 4)) +\n  facet_wrap(~ Crime) +\n  theme(plot.title = element_text(face = \"bold\", size = 18)) +\n  labs(x = \"Age (years)\", title = \"Criminal offending in New Zealand (2014-2022)\") +\n  theme_minimal() +\n  theme(strip.text = element_text(hjust = 0),\n        strip.background = element_blank(),\n        panel.grid = element_blank())\n\n\n\n\n\n\n\n\nComparing this plot to the one in question 4, I am not completely on team Tufte. I prefer the previous visualisation though more ink has been used in that plot. I think the area of the bars help give a better overview of the data. That said, I do like the removal of facet strip background and grid lines that are not needed.\nSo in my opinion this does not help answer questions of interest, but I do recognise we have the same ability to answer them using this plot, given enough time to adjust our glasses.",
+    "crumbs": [
+      "Lab assignments",
+      "Lab3 - Effective Data Visualisations"
+    ]
+  },
+  {
+    "objectID": "labs/lab3_answer.html#question-6",
+    "href": "labs/lab3_answer.html#question-6",
+    "title": "Lab3 - Effective Data Visualisations",
+    "section": "Question 6",
+    "text": "Question 6\n\nWe create the labels “on the plot” rather than have them in strips from ggplot2::facet_wrap by\n\nremoving the strips entirely with by setting strip.background and strip.text in ggplot2::theme to element_blank().\nadding labels with gggrid::grid_panel. We get access to the labels by mapping them as an aesthetic, so it’s available in the data inside our function that creates the textGrob.\n\nI tried doing the grid lines by just setting panel.grid.major.x to element_blank(), but that did not work, so I removed all grid with panel.grid to element_blank() and then adding panel.grid.major.y as white lines.\n\n\nggplot(crimeAgeType, aes(Age, Freq, group = Crime)) +\n  geom_col(just=0, fill = \"dodgerblue\", alpha = .7) +\n  facet_wrap(~ Crime) +\n  gggrid::grid_panel(\n    function(data, coords) {\n      grid::textGrob(\n        label = data$label,\n        x = grid::unit(2, \"mm\"),\n        y = grid::unit(1, \"npc\") - grid::unit(2, \"mm\"),\n        just = c(\"left\", \"top\")\n      )\n    },\n    aes(label = Crime)\n  ) +\n  theme(plot.title = element_text(face = \"bold\", size = 18)) +\n  labs(x = \"Age (years)\", title = \"Criminal offending in New Zealand (2014-2022)\") +\n  theme(strip.background = element_blank(),\n        strip.text = element_blank(),\n        panel.grid = element_blank(),\n        panel.grid.major.y = element_line(\"white\"))\n\n\n\n\n\n\n\n\nThe plot is basically the same as in question 4, so I have the same comments comparing it to previous plots. This plot does have an addition of only y-grid lines, which I think help read the data more accurately. A way to keep the grid lines but increase the data-ink ratio would be to have a white background and light grey grid lines rather than the other way around.",
+    "crumbs": [
+      "Lab assignments",
+      "Lab3 - Effective Data Visualisations"
+    ]
+  },
+  {
+    "objectID": "labs/lab1_answer.html",
+    "href": "labs/lab1_answer.html",
+    "title": "Lab1 - Grammar of Graphics",
+    "section": "",
+    "text": "Loading packages.\nlibrary(ggplot2)\nlibrary(tidyverse)",
+    "crumbs": [
+      "Lab assignments",
+      "Lab1 - Grammar of Graphics"
+    ]
+  },
+  {
+    "objectID": "labs/lab1_answer.html#question-1",
+    "href": "labs/lab1_answer.html#question-1",
+    "title": "Lab1 - Grammar of Graphics",
+    "section": "Question 1",
+    "text": "Question 1\nWe create the bar plot below by using the geom_bar geom function to create a summary statistic of counts of the variable Age.Lower (geom_bar uses the stat stat_count behind the scenes to create the summary), which we use as out x in our aesthetic mapping for the plot. Note that we set the just argument to 0 to ensure a left-alignment of the bars (default is 0.5, which centers the bars).\n\ncrime %&gt;% \n  ggplot(aes(x = Age.Lower)) +\n  geom_bar(just = 0)\n\n\n\n\n\n\n\n\nThis plot has substantive issues in answering our questions of trend over time as well as differences between males and females as information about time and gender is not in the plot. However, the bar plot does show that the highest number of incidents across all values of a lower bound of a 5-year age band of the offender, is among incidents with a lower age band of 15 years. There are also quite a few incidents with a lower bound of 10 years, which seems to match the frequency of incidents corresponding to a lower limit of 50 years. Thus, youth offending is occurring frequently, but by accumulating the adult incidents, we see that adult offending is in general more frequent than youth offending.",
+    "crumbs": [
+      "Lab assignments",
+      "Lab1 - Grammar of Graphics"
+    ]
+  },
+  {
+    "objectID": "labs/lab1_answer.html#question-2",
+    "href": "labs/lab1_answer.html#question-2",
+    "title": "Lab1 - Grammar of Graphics",
+    "section": "Question 2",
+    "text": "Question 2\nDoing the summary statistic of count across the different lower limits ourselves in data and then plotting, we use geom geom_col, which utilises the stat stat_identity with aesthetic mapping of x being Var1 (our lower bound of ages) and y being Freq (our frequency of incidents for the corresponding lower bound of age).\n\ncrimeTab &lt;- as.data.frame(table(crime$Age.Lower))\ncrimeTab %&gt;% \n  ggplot(aes(x = Var1, y = Freq)) +\n  geom_col(just = 0)",
+    "crumbs": [
+      "Lab assignments",
+      "Lab1 - Grammar of Graphics"
+    ]
+  },
+  {
+    "objectID": "labs/lab1_answer.html#question-3",
+    "href": "labs/lab1_answer.html#question-3",
+    "title": "Lab1 - Grammar of Graphics",
+    "section": "Question 3",
+    "text": "Question 3\nWe create the plot as we did in question 1 with geom_bar geom function (which uses stat_count as stat) with aesthetic mapping of Age.Lower as our x. However, in this case, we add aesthetic mappings of fill = SEX, which fills the bars with colors based on the observations’ value of SEX in the data set. The default value of position in geom_bar is \"stack\", so by the default behavior of the geom, we produce this stacked plot.\n\ncrime %&gt;% \n  ggplot(aes(x = Age.Lower, fill = SEX)) +\n  geom_bar(just = 0)\n\n\n\n\n\n\n\n\nThis new plot does not provide new information in regards to our question of youth vs. adult offending, compared to the plot in question 1, so we could say all the same to that question. The time trend question is still not answerable by this plot due to the substantive issue of missing information about time.\nHowever, this plot does help us get an idea of differences between female and male offenders. The plot shows immediately that there are more male offenders than female offenders. It looks like the ratio is quite similar across different lower bounds of age, though it’s hard to judge whether this is exactly or just approximately correct from this plot.",
+    "crumbs": [
+      "Lab assignments",
+      "Lab1 - Grammar of Graphics"
+    ]
+  },
+  {
+    "objectID": "labs/lab1_answer.html#question-4",
+    "href": "labs/lab1_answer.html#question-4",
+    "title": "Lab1 - Grammar of Graphics",
+    "section": "Question 4",
+    "text": "Question 4\n\ncrime %&gt;% \n  ggplot(aes(x = Age.Lower, fill = SEX)) +\n  geom_bar(just = 0, position = \"dodge\")\n\n\n\n\n\n\n\ncrime %&gt;% \n  ggplot(aes(x = Age.Lower, fill = SEX)) +\n  geom_bar(just = 0, position = \"identity\")\n\n\n\n\n\n\n\ncrime %&gt;% \n  ggplot(aes(x = Age.Lower, fill = SEX)) +\n  geom_bar(just = 0, position = \"fill\")\n\n\n\n\n\n\n\n\nThe plot with position = \"fill\" cannot help us answer the question about youth vs. adult offending (or the time trend). However, it does a great job at trying to answer the question about differences between male and female offending, as it is essentially plotting the ratio of male and female offenders as its response on the y-axis. For the plot in question 3, I said it looked like the ratio was approximately the same across different lower bounds of age. This plot shows more clearly that the ratios are quite similar, but there are subtle differences. The biggest difference is seen from the very lowest ages, where a higher proportion of males is present, which takes a big drop at lower bound of age 10.\nThe plot with position = \"dodge\" shows incidence rates individually for each combination of gender and lower bound of age, compared to the position = \"stack\", which showed cumulative incidence rates within age groups. In my opinion, position = \"stack\" does a better job of answering the question of youth vs. adult offending by providing cumulative rates while still giving an idea of gender differences, and the position = \"fill\" plot does a better job of answering the question about gender differences.\nThe plot with position = \"identity\" does not provide any position adjustment, thus positioning the bar for females behind the bar for males, thus making the plot not provide any information about gender differences, though that was the whole point of coloring the bars by gender. Biggest possible substantive issue in answering the question of gender differences; no information is available.",
+    "crumbs": [
+      "Lab assignments",
+      "Lab1 - Grammar of Graphics"
+    ]
+  },
+  {
+    "objectID": "labs/lab1_answer.html#question-5",
+    "href": "labs/lab1_answer.html#question-5",
+    "title": "Lab1 - Grammar of Graphics",
+    "section": "Question 5",
+    "text": "Question 5\nTo create a line plot, we can use the geom_line geom. We use the stat_identity stat to display the data as is, as we have already ourselves created the summary statistic of frequency across time that we are interested in. Thus, we just use aesthetic mappings of x = Date and y = Freq to plot the values in data.\n\ncrimeTrend &lt;- as.data.frame(table(crime$Date))\ncrimeTrend$Date &lt;- as.Date(crimeTrend$Var1)\n\ncrimeTrend %&gt;% \n  ggplot(aes(x = Date, y = Freq)) +\n  geom_line()\n\n\n\n\n\n\n\n\nThis plot has substantive issues in answering the questions we previously discussed, as it does not contain information on age or gender. However, it can be used to answer the question about time trend. The plot shows that there has been an overall downwards trend in incidence rates of crime from 2014 to 2022 with natural variability in data. However, we do notice some peaks that seem to have larger variance than other places in data during year 2016 and at the start of 2020. Furthermore, the downwards trend seems to reverse at the start of 2022, with incidence rates that seem to start increasing.",
+    "crumbs": [
+      "Lab assignments",
+      "Lab1 - Grammar of Graphics"
+    ]
+  },
+  {
+    "objectID": "labs/lab1_answer.html#question-6",
+    "href": "labs/lab1_answer.html#question-6",
+    "title": "Lab1 - Grammar of Graphics",
+    "section": "Question 6",
+    "text": "Question 6\nWe use the geom_line geom with stat_identity stat and with aesthetic mappings of x = Date, y = Freq, color = Var2 and linewidth = 1.4. Note however that we use the aesthetic linewidth outside aes() because it is not associated with any variable but rather we just want to change it statically for all lines in the plot. If we wished to change the linewidth for different values of SEX, we could put it inside aes(). Note also that we change the default colors assigned to the different gender by using scale_color_manual to tell exactly what colors we would like for the different values.\n\ncrimeTrendSex &lt;- as.data.frame(table(crime$Date, crime$SEX))\ncrimeTrendSex$Date &lt;- as.Date(crimeTrendSex$Var1)\n\ncrimeTrendSex %&gt;% \n  ggplot(aes(x = Date, y = Freq, color = Var2)) +\n  geom_line(linewidth = 1.4) +\n  scale_color_manual(values = c(Female = \"pink\", Male = 4))\n\n\n\n\n\n\n\n\nThe plot shows the exact same as we commented in the previous question about the time trend. Overall a downward trend is seen with some larger peaks in a couple location, and a sudden rise in incidence is seen from the start of 2022.\nThis plot, however, can also help answer the question about gender differences, as we can see from the plot that there are quite a few more male offenders than female offenders. It does a good job if trying to answer a questions specific to absolute incidence rates for males and females across years. If seeking to answer a question about the ratio of female and male offenders, a new response variable consisting of this ratio and plotting against time would be benefitial.",
+    "crumbs": [
+      "Lab assignments",
+      "Lab1 - Grammar of Graphics"
+    ]
+  },
+  {
+    "objectID": "labs/lab1_answer.html#question-7",
+    "href": "labs/lab1_answer.html#question-7",
+    "title": "Lab1 - Grammar of Graphics",
+    "section": "Question 7",
+    "text": "Question 7\nWe use the geom_line geom with stat_identity stat and with aesthetic mappings of x = Date, y = Freq, group = Age, color = Age and linewidth = 1. The use of group = Age is to ensure that only points inside each group are connected to form a line. Without this aesthetic mapping, the plot would be a complete mess (more than it is…)\n\ncrimeTrendAge &lt;- as.data.frame(table(crime$Date, crime$Age.Lower))\ncrimeTrendAge$Date &lt;- as.Date(crimeTrendAge$Var1)\ncrimeTrendAge$Age &lt;- as.numeric(as.character(crimeTrendAge$Var2))\n\ncrimeTrendAge %&gt;% \n  ggplot(aes(x = Date, y = Freq, group = Age, color = Age)) +\n  geom_line(linewidth = 1)\n\n\n\n\n\n\n\n\nIn my opinion, this plot does a bad job of trying to answer any of the questions. It tries to help answer the question about trend over time while trying to show differences between youth and adult offending. However, the plot is trying too much, leading the reader unable to derive any meaning from it.\nIt’s possible to sense a form of downward trend over time, but it’s hard to see and is much better answered using one of the previous plots. In regards to youth vs. adult offending, the reader is unable to identify the age corresponding to a color due to the small difference in colors between many groups, possibly creating perceptual issues as a color might seem darker or lighter than it actually is if surrounded by a color on the “opposite side”.",
+    "crumbs": [
+      "Lab assignments",
+      "Lab1 - Grammar of Graphics"
+    ]
+  },
+  {
+    "objectID": "labs/lab1_answer.html#question-8",
+    "href": "labs/lab1_answer.html#question-8",
+    "title": "Lab1 - Grammar of Graphics",
+    "section": "Question 8",
+    "text": "Question 8\nThe geom is again geom_line with stat stat_identityand x = Date, y = Freq and linewidth = 1 as aesthetic mappings and facet by values of Age.\n\ncrimeTrendAge %&gt;% \n  ggplot(aes(x = Date, y = Freq)) +\n  geom_line(linewidth = 1) +\n  facet_wrap(~ Age)\n\n\n\n\n\n\n\n\nThis plot helps us answer a question of trends over time of youth vs. adult offending. So the plot does not help answering the “overall/general/individual” questions posed at the start but rather helps answer this “combined question”. On previous plots we saw a downward trend across time, and we saw the highest frequency of incidents for the age group with lower bound of 15 years.\nThis plot shows that the downward trend is actually more dramatic for this specific age group that showed the highest incidence. Other age groups also show a downward trend, but much more slightly, and it thus looks like the downward trend overall is dominated by the downward trend of younger groups.",
+    "crumbs": [
+      "Lab assignments",
+      "Lab1 - Grammar of Graphics"
+    ]
+  },
+  {
+    "objectID": "labs/lab1_answer.html#question-9",
+    "href": "labs/lab1_answer.html#question-9",
+    "title": "Lab1 - Grammar of Graphics",
+    "section": "Question 9",
+    "text": "Question 9\nThis plot is created as in question 1 but with facets on the new Year variable. That is, we use geom_bar as the geom (with stat_count as the stat) and aesthetic mapping of x = Age.Lower.\n\ncrime$Year &lt;- as.POSIXlt(crime$Date)$year + 1900\n\ncrime %&gt;% \n  ggplot(aes(x = Age.Lower)) +\n  geom_bar(just = 0) +\n  facet_wrap(~ Year)\n\n\n\n\n\n\n\n\nThe plot helps answer the same question as the previous question, i.e. trend over time of offending across age groups. The plot supports our explanation from above, seeing that youth offending is on a more dramatic downward trend compared to the older age groups. This is the main strength of the plot. We can also see that the overall frequency is decreasing, but other plots have been better at showing that.",
+    "crumbs": [
+      "Lab assignments",
+      "Lab1 - Grammar of Graphics"
+    ]
+  },
+  {
+    "objectID": "labs/lab1_answer.html#question-10",
+    "href": "labs/lab1_answer.html#question-10",
+    "title": "Lab1 - Grammar of Graphics",
+    "section": "Question 10",
+    "text": "Question 10\nI notice this plot does a reordering of the levels of the factor with divisions, ensures line break in the legend, removes text, ticks and titles from the x- and y-axis to increase the data-to-ink ratio and manual choosing of colors to make neighboring groups more distinct than the default color choice.\n\ncrimeTrendDivision &lt;- as.data.frame(table(crime$Age.Lower, crime$ANZSOC.Division))\ncrimeTrendDivision$Age &lt;- crimeTrendDivision$Var1\ncrimeTrendDivision$Division &lt;- stringr::str_wrap(crimeTrendDivision$Var2, 30)\n\nord_div &lt;- crimeTrendDivision %&gt;% \n  dplyr::filter(Age == 15) %&gt;% \n  dplyr::arrange(desc(Freq)) %&gt;% \n  dplyr::pull(Division) %&gt;% \n  as.character()\ncrimeTrendDivision$ANZSOC.Division &lt;- factor(crimeTrendDivision$Division,\n                                              levels = ord_div)\ncolors &lt;- rep(as.character(paletteer::paletteer_d(\"ggthemes::colorblind\")), 2) %&gt;% \n  setNames(levels(crimeTrendDivision$ANZSOC.Division))\n\ncrimeTrendDivision %&gt;% \n  ggplot(aes(x = ANZSOC.Division, y = Freq,\n             group = ANZSOC.Division, fill = ANZSOC.Division)) +\n  geom_col(just = 0, position = \"dodge\") +\n  facet_wrap(~ Age) +\n  scale_fill_manual(values = colors) +\n  theme(axis.text = element_blank(),\n        axis.ticks = element_blank(),\n        axis.title = element_blank(),\n        legend.key.width = unit(0.3, \"cm\"),\n        legend.key.height = unit(0.9, \"cm\"),\n        legend.key.spacing.y = unit(0.1, \"cm\"),\n        legend.text = element_text(size = 8))",
+    "crumbs": [
+      "Lab assignments",
+      "Lab1 - Grammar of Graphics"
+    ]
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "STATS 787: Data Visualisation lab assignments",
+    "section": "",
+    "text": "This Quarto website is home to assignment lab answers in the course STATS 787: Data Visualisation at UoA (University of Auckland) held by the author of the grid package Paul Murrell.\n\n\n\n Back to top"
+  },
+  {
     "objectID": "labs/lab2_answer.html",
     "href": "labs/lab2_answer.html",
     "title": "Lab2 - The grid Graphics System",
@@ -129,134 +345,6 @@
     "crumbs": [
       "Lab assignments",
       "Lab2 - The `grid` Graphics System"
-    ]
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "STATS 787: Data Visualisation lab assignments",
-    "section": "",
-    "text": "This Quarto website is home to assignment lab answers in the course STATS 787: Data Visualisation at UoA (University of Auckland) held by the author of the grid package Paul Murrell.\n\n\n\n Back to top"
-  },
-  {
-    "objectID": "labs/lab1_answer.html",
-    "href": "labs/lab1_answer.html",
-    "title": "Lab1 - Grammar of Graphics",
-    "section": "",
-    "text": "Loading packages.\nlibrary(ggplot2)\nlibrary(tidyverse)",
-    "crumbs": [
-      "Lab assignments",
-      "Lab1 - Grammar of Graphics"
-    ]
-  },
-  {
-    "objectID": "labs/lab1_answer.html#question-1",
-    "href": "labs/lab1_answer.html#question-1",
-    "title": "Lab1 - Grammar of Graphics",
-    "section": "Question 1",
-    "text": "Question 1\nWe create the bar plot below by using the geom_bar geom function to create a summary statistic of counts of the variable Age.Lower (geom_bar uses the stat stat_count behind the scenes to create the summary), which we use as out x in our aesthetic mapping for the plot. Note that we set the just argument to 0 to ensure a left-alignment of the bars (default is 0.5, which centers the bars).\n\ncrime %&gt;% \n  ggplot(aes(x = Age.Lower)) +\n  geom_bar(just = 0)\n\n\n\n\n\n\n\n\nThis plot has substantive issues in answering our questions of trend over time as well as differences between males and females as information about time and gender is not in the plot. However, the bar plot does show that the highest number of incidents across all values of a lower bound of a 5-year age band of the offender, is among incidents with a lower age band of 15 years. There are also quite a few incidents with a lower bound of 10 years, which seems to match the frequency of incidents corresponding to a lower limit of 50 years. Thus, youth offending is occurring frequently, but by accumulating the adult incidents, we see that adult offending is in general more frequent than youth offending.",
-    "crumbs": [
-      "Lab assignments",
-      "Lab1 - Grammar of Graphics"
-    ]
-  },
-  {
-    "objectID": "labs/lab1_answer.html#question-2",
-    "href": "labs/lab1_answer.html#question-2",
-    "title": "Lab1 - Grammar of Graphics",
-    "section": "Question 2",
-    "text": "Question 2\nDoing the summary statistic of count across the different lower limits ourselves in data and then plotting, we use geom geom_col, which utilises the stat stat_identity with aesthetic mapping of x being Var1 (our lower bound of ages) and y being Freq (our frequency of incidents for the corresponding lower bound of age).\n\ncrimeTab &lt;- as.data.frame(table(crime$Age.Lower))\ncrimeTab %&gt;% \n  ggplot(aes(x = Var1, y = Freq)) +\n  geom_col(just = 0)",
-    "crumbs": [
-      "Lab assignments",
-      "Lab1 - Grammar of Graphics"
-    ]
-  },
-  {
-    "objectID": "labs/lab1_answer.html#question-3",
-    "href": "labs/lab1_answer.html#question-3",
-    "title": "Lab1 - Grammar of Graphics",
-    "section": "Question 3",
-    "text": "Question 3\nWe create the plot as we did in question 1 with geom_bar geom function (which uses stat_count as stat) with aesthetic mapping of Age.Lower as our x. However, in this case, we add aesthetic mappings of fill = SEX, which fills the bars with colors based on the observations’ value of SEX in the data set. The default value of position in geom_bar is \"stack\", so by the default behavior of the geom, we produce this stacked plot.\n\ncrime %&gt;% \n  ggplot(aes(x = Age.Lower, fill = SEX)) +\n  geom_bar(just = 0)\n\n\n\n\n\n\n\n\nThis new plot does not provide new information in regards to our question of youth vs. adult offending, compared to the plot in question 1, so we could say all the same to that question. The time trend question is still not answerable by this plot due to the substantive issue of missing information about time.\nHowever, this plot does help us get an idea of differences between female and male offenders. The plot shows immediately that there are more male offenders than female offenders. It looks like the ratio is quite similar across different lower bounds of age, though it’s hard to judge whether this is exactly or just approximately correct from this plot.",
-    "crumbs": [
-      "Lab assignments",
-      "Lab1 - Grammar of Graphics"
-    ]
-  },
-  {
-    "objectID": "labs/lab1_answer.html#question-4",
-    "href": "labs/lab1_answer.html#question-4",
-    "title": "Lab1 - Grammar of Graphics",
-    "section": "Question 4",
-    "text": "Question 4\n\ncrime %&gt;% \n  ggplot(aes(x = Age.Lower, fill = SEX)) +\n  geom_bar(just = 0, position = \"dodge\")\n\n\n\n\n\n\n\ncrime %&gt;% \n  ggplot(aes(x = Age.Lower, fill = SEX)) +\n  geom_bar(just = 0, position = \"identity\")\n\n\n\n\n\n\n\ncrime %&gt;% \n  ggplot(aes(x = Age.Lower, fill = SEX)) +\n  geom_bar(just = 0, position = \"fill\")\n\n\n\n\n\n\n\n\nThe plot with position = \"fill\" cannot help us answer the question about youth vs. adult offending (or the time trend). However, it does a great job at trying to answer the question about differences between male and female offending, as it is essentially plotting the ratio of male and female offenders as its response on the y-axis. For the plot in question 3, I said it looked like the ratio was approximately the same across different lower bounds of age. This plot shows more clearly that the ratios are quite similar, but there are subtle differences. The biggest difference is seen from the very lowest ages, where a higher proportion of males is present, which takes a big drop at lower bound of age 10.\nThe plot with position = \"dodge\" shows incidence rates individually for each combination of gender and lower bound of age, compared to the position = \"stack\", which showed cumulative incidence rates within age groups. In my opinion, position = \"stack\" does a better job of answering the question of youth vs. adult offending by providing cumulative rates while still giving an idea of gender differences, and the position = \"fill\" plot does a better job of answering the question about gender differences.\nThe plot with position = \"identity\" does not provide any position adjustment, thus positioning the bar for females behind the bar for males, thus making the plot not provide any information about gender differences, though that was the whole point of coloring the bars by gender. Biggest possible substantive issue in answering the question of gender differences; no information is available.",
-    "crumbs": [
-      "Lab assignments",
-      "Lab1 - Grammar of Graphics"
-    ]
-  },
-  {
-    "objectID": "labs/lab1_answer.html#question-5",
-    "href": "labs/lab1_answer.html#question-5",
-    "title": "Lab1 - Grammar of Graphics",
-    "section": "Question 5",
-    "text": "Question 5\nTo create a line plot, we can use the geom_line geom. We use the stat_identity stat to display the data as is, as we have already ourselves created the summary statistic of frequency across time that we are interested in. Thus, we just use aesthetic mappings of x = Date and y = Freq to plot the values in data.\n\ncrimeTrend &lt;- as.data.frame(table(crime$Date))\ncrimeTrend$Date &lt;- as.Date(crimeTrend$Var1)\n\ncrimeTrend %&gt;% \n  ggplot(aes(x = Date, y = Freq)) +\n  geom_line()\n\n\n\n\n\n\n\n\nThis plot has substantive issues in answering the questions we previously discussed, as it does not contain information on age or gender. However, it can be used to answer the question about time trend. The plot shows that there has been an overall downwards trend in incidence rates of crime from 2014 to 2022 with natural variability in data. However, we do notice some peaks that seem to have larger variance than other places in data during year 2016 and at the start of 2020. Furthermore, the downwards trend seems to reverse at the start of 2022, with incidence rates that seem to start increasing.",
-    "crumbs": [
-      "Lab assignments",
-      "Lab1 - Grammar of Graphics"
-    ]
-  },
-  {
-    "objectID": "labs/lab1_answer.html#question-6",
-    "href": "labs/lab1_answer.html#question-6",
-    "title": "Lab1 - Grammar of Graphics",
-    "section": "Question 6",
-    "text": "Question 6\nWe use the geom_line geom with stat_identity stat and with aesthetic mappings of x = Date, y = Freq, color = Var2 and linewidth = 1.4. Note however that we use the aesthetic linewidth outside aes() because it is not associated with any variable but rather we just want to change it statically for all lines in the plot. If we wished to change the linewidth for different values of SEX, we could put it inside aes(). Note also that we change the default colors assigned to the different gender by using scale_color_manual to tell exactly what colors we would like for the different values.\n\ncrimeTrendSex &lt;- as.data.frame(table(crime$Date, crime$SEX))\ncrimeTrendSex$Date &lt;- as.Date(crimeTrendSex$Var1)\n\ncrimeTrendSex %&gt;% \n  ggplot(aes(x = Date, y = Freq, color = Var2)) +\n  geom_line(linewidth = 1.4) +\n  scale_color_manual(values = c(Female = \"pink\", Male = 4))\n\n\n\n\n\n\n\n\nThe plot shows the exact same as we commented in the previous question about the time trend. Overall a downward trend is seen with some larger peaks in a couple location, and a sudden rise in incidence is seen from the start of 2022.\nThis plot, however, can also help answer the question about gender differences, as we can see from the plot that there are quite a few more male offenders than female offenders. It does a good job if trying to answer a questions specific to absolute incidence rates for males and females across years. If seeking to answer a question about the ratio of female and male offenders, a new response variable consisting of this ratio and plotting against time would be benefitial.",
-    "crumbs": [
-      "Lab assignments",
-      "Lab1 - Grammar of Graphics"
-    ]
-  },
-  {
-    "objectID": "labs/lab1_answer.html#question-7",
-    "href": "labs/lab1_answer.html#question-7",
-    "title": "Lab1 - Grammar of Graphics",
-    "section": "Question 7",
-    "text": "Question 7\nWe use the geom_line geom with stat_identity stat and with aesthetic mappings of x = Date, y = Freq, group = Age, color = Age and linewidth = 1. The use of group = Age is to ensure that only points inside each group are connected to form a line. Without this aesthetic mapping, the plot would be a complete mess (more than it is…)\n\ncrimeTrendAge &lt;- as.data.frame(table(crime$Date, crime$Age.Lower))\ncrimeTrendAge$Date &lt;- as.Date(crimeTrendAge$Var1)\ncrimeTrendAge$Age &lt;- as.numeric(as.character(crimeTrendAge$Var2))\n\ncrimeTrendAge %&gt;% \n  ggplot(aes(x = Date, y = Freq, group = Age, color = Age)) +\n  geom_line(linewidth = 1)\n\n\n\n\n\n\n\n\nIn my opinion, this plot does a bad job of trying to answer any of the questions. It tries to help answer the question about trend over time while trying to show differences between youth and adult offending. However, the plot is trying too much, leading the reader unable to derive any meaning from it.\nIt’s possible to sense a form of downward trend over time, but it’s hard to see and is much better answered using one of the previous plots. In regards to youth vs. adult offending, the reader is unable to identify the age corresponding to a color due to the small difference in colors between many groups, possibly creating perceptual issues as a color might seem darker or lighter than it actually is if surrounded by a color on the “opposite side”.",
-    "crumbs": [
-      "Lab assignments",
-      "Lab1 - Grammar of Graphics"
-    ]
-  },
-  {
-    "objectID": "labs/lab1_answer.html#question-8",
-    "href": "labs/lab1_answer.html#question-8",
-    "title": "Lab1 - Grammar of Graphics",
-    "section": "Question 8",
-    "text": "Question 8\nThe geom is again geom_line with stat stat_identityand x = Date, y = Freq and linewidth = 1 as aesthetic mappings and facet by values of Age.\n\ncrimeTrendAge %&gt;% \n  ggplot(aes(x = Date, y = Freq)) +\n  geom_line(linewidth = 1) +\n  facet_wrap(~ Age)\n\n\n\n\n\n\n\n\nThis plot helps us answer a question of trends over time of youth vs. adult offending. So the plot does not help answering the “overall/general/individual” questions posed at the start but rather helps answer this “combined question”. On previous plots we saw a downward trend across time, and we saw the highest frequency of incidents for the age group with lower bound of 15 years.\nThis plot shows that the downward trend is actually more dramatic for this specific age group that showed the highest incidence. Other age groups also show a downward trend, but much more slightly, and it thus looks like the downward trend overall is dominated by the downward trend of younger groups.",
-    "crumbs": [
-      "Lab assignments",
-      "Lab1 - Grammar of Graphics"
-    ]
-  },
-  {
-    "objectID": "labs/lab1_answer.html#question-9",
-    "href": "labs/lab1_answer.html#question-9",
-    "title": "Lab1 - Grammar of Graphics",
-    "section": "Question 9",
-    "text": "Question 9\nThis plot is created as in question 1 but with facets on the new Year variable. That is, we use geom_bar as the geom (with stat_count as the stat) and aesthetic mapping of x = Age.Lower.\n\ncrime$Year &lt;- as.POSIXlt(crime$Date)$year + 1900\n\ncrime %&gt;% \n  ggplot(aes(x = Age.Lower)) +\n  geom_bar(just = 0) +\n  facet_wrap(~ Year)\n\n\n\n\n\n\n\n\nThe plot helps answer the same question as the previous question, i.e. trend over time of offending across age groups. The plot supports our explanation from above, seeing that youth offending is on a more dramatic downward trend compared to the older age groups. This is the main strength of the plot. We can also see that the overall frequency is decreasing, but other plots have been better at showing that.",
-    "crumbs": [
-      "Lab assignments",
-      "Lab1 - Grammar of Graphics"
-    ]
-  },
-  {
-    "objectID": "labs/lab1_answer.html#question-10",
-    "href": "labs/lab1_answer.html#question-10",
-    "title": "Lab1 - Grammar of Graphics",
-    "section": "Question 10",
-    "text": "Question 10\nI notice this plot does a reordering of the levels of the factor with divisions, ensures line break in the legend, removes text, ticks and titles from the x- and y-axis to increase the data-to-ink ratio and manual choosing of colors to make neighboring groups more distinct than the default color choice.\n\ncrimeTrendDivision &lt;- as.data.frame(table(crime$Age.Lower, crime$ANZSOC.Division))\ncrimeTrendDivision$Age &lt;- crimeTrendDivision$Var1\ncrimeTrendDivision$Division &lt;- stringr::str_wrap(crimeTrendDivision$Var2, 30)\n\nord_div &lt;- crimeTrendDivision %&gt;% \n  dplyr::filter(Age == 15) %&gt;% \n  dplyr::arrange(desc(Freq)) %&gt;% \n  dplyr::pull(Division) %&gt;% \n  as.character()\ncrimeTrendDivision$ANZSOC.Division &lt;- factor(crimeTrendDivision$Division,\n                                              levels = ord_div)\ncolors &lt;- rep(as.character(paletteer::paletteer_d(\"ggthemes::colorblind\")), 2) %&gt;% \n  setNames(levels(crimeTrendDivision$ANZSOC.Division))\n\ncrimeTrendDivision %&gt;% \n  ggplot(aes(x = ANZSOC.Division, y = Freq,\n             group = ANZSOC.Division, fill = ANZSOC.Division)) +\n  geom_col(just = 0, position = \"dodge\") +\n  facet_wrap(~ Age) +\n  scale_fill_manual(values = colors) +\n  theme(axis.text = element_blank(),\n        axis.ticks = element_blank(),\n        axis.title = element_blank(),\n        legend.key.width = unit(0.3, \"cm\"),\n        legend.key.height = unit(0.9, \"cm\"),\n        legend.key.spacing.y = unit(0.1, \"cm\"),\n        legend.text = element_text(size = 8))",
-    "crumbs": [
-      "Lab assignments",
-      "Lab1 - Grammar of Graphics"
     ]
   }
 ]

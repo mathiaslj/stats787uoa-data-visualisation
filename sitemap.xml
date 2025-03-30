@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://mathiaslj.github.io/stats787uoa-data-visualisation/labs/lab2_answer.html</loc>
-    <lastmod>2025-03-20T19:52:28.412Z</lastmod>
-  </url>
-  <url>
-    <loc>https://mathiaslj.github.io/stats787uoa-data-visualisation/index.html</loc>
-    <lastmod>2025-03-20T19:52:28.405Z</lastmod>
+    <loc>https://mathiaslj.github.io/stats787uoa-data-visualisation/labs/lab3_answer.html</loc>
+    <lastmod>2025-03-30T21:27:54.825Z</lastmod>
   </url>
   <url>
     <loc>https://mathiaslj.github.io/stats787uoa-data-visualisation/labs/lab1_answer.html</loc>
-    <lastmod>2025-03-20T19:52:28.409Z</lastmod>
+    <lastmod>2025-03-30T21:27:54.822Z</lastmod>
+  </url>
+  <url>
+    <loc>https://mathiaslj.github.io/stats787uoa-data-visualisation/index.html</loc>
+    <lastmod>2025-03-30T21:27:54.818Z</lastmod>
+  </url>
+  <url>
+    <loc>https://mathiaslj.github.io/stats787uoa-data-visualisation/labs/lab2_answer.html</loc>
+    <lastmod>2025-03-30T21:27:54.824Z</lastmod>
   </url>
 </urlset>
