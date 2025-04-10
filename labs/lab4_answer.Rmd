@@ -283,103 +283,83 @@ Thus, I think this plot actually does a pretty good job of letting us answer all
 
 # Challenge 7
 
-I didn't quite succeed with the challenge...
+To create the plot, I
 
-Below is code that creates a `textGrob` from the longest string and takes the `grobWidth` to get the width of relevant viewports. Then I create 2 ggplots, 1 showing the actual lines and 1 using `grid_group` in a plot without points to obtain a plot only of the text. The reason why I thought of using `grid_group` in an empty plot was to obtain the y-coordinates of the first values in the line plots.
-
-The approach almost works, but I do have some problems with the text being cut to the left. I have checked that my viewport goes all the way to the left edge (see grey grid.rect in the picture), and I cannot figure out why the text is being cut.
+1) Create a `textGrob` from the longest string and take the `grobWidth` to get the width needed to display the text.
+2) Create a ggplot inside a viewport corresponding to all the width minus the width needed to display the text minus 2 mm to give some space
+3) The ggplot is created by making the line plot and using `gggrid::grid_group` to label the crime types.
+  - Enable writing the text "outside" the plot with `coord_cartesian(clip = "off")`
 
 ```{r, fig.width = 12, fig.height = 6}
 youthMonthType$Var2noBreak <- factor(
   youthMonthType$Var2, levels = typeLabels, labels = typeLevels
 )
 
-fontsize <- 9
-
-longest_str_ind <- which.max(stringr::str_width(youthMonthType$Var2noBreak))
-longest_str <- as.character(youthMonthType$Var2noBreak[longest_str_ind])
-dummy_grob <- grid::textGrob(longest_str, gp = grid::gpar(fontsize = fontsize))
-text_width <- grid::grobWidth(dummy_grob)
-
-monthLabels <- levels(youthMonthType$Var2noBreak)
-highlightCats <- grepl("^(Public|Dangerous)", monthLabels)
-colors <- scales::pal_hue()(length(monthLabels))
-colors[!highlightCats] <- sapply(
-  colors[!highlightCats], colorspace::desaturate, amount = 0.8
-)
-
-lwds <- setNames(rep(0.6, length(monthLabels)), monthLabels)
-lwds[highlightCats] <- 1.2
-
-add_label <- function(data, coords) {
-  grid::textGrob(
-    data$label,
-    x = grid::unit(1, "npc") - grid::unit(2, "mm"),
-    y = grid::unit(coords$y[1], "npc"),
-    gp = grid::gpar(col = data$colour,
-                    fontsize = fontsize,
-                    fontface = ifelse(data$highlight, "bold", "plain")),
-    hjust = 1
+create_plot <- function(
+    label.fontsize = 12,
+    lwds = c(0.6, 1.2)) {
+  
+  longest_str_ind <- which.max(stringr::str_width(youthMonthType$Var2noBreak))
+  longest_str <- as.character(youthMonthType$Var2noBreak[longest_str_ind])
+  dummy_grob <- grid::textGrob(longest_str, gp = grid::gpar(fontsize = label.fontsize))
+  text_width <- grid::grobWidth(dummy_grob)
+  
+  monthLabels <- levels(youthMonthType$Var2noBreak)
+  highlightCats <- grepl("^(Public|Dangerous)", monthLabels)
+  colors <- scales::pal_hue()(length(monthLabels))
+  colors[!highlightCats] <- sapply(
+    colors[!highlightCats], colorspace::desaturate, amount = 0.8
   )
-}
-p <- ggplot(youthMonthType,
-            aes(x = Month, y = Freq,
-                color = Var2noBreak, group = Var2noBreak, linewidth = Var2noBreak)) +
-  geom_line(show.legend = FALSE) +
-  scale_color_manual(values = colors) +
-  scale_linewidth_manual(values = lwds) +
-  scale_y_continuous(position = "right") +
-  scale_x_date(expand = expansion(0, 0)) + 
-  labs(x = "", y = "") +
-  theme_minimal() +
-  theme(axis.ticks.y = element_blank(),
-        panel.grid.major.x = element_blank(),
-        panel.grid.minor.x = element_blank(),
-        panel.grid.minor.y = element_blank()
-  )
-p_text <- ggplot(youthMonthType,
-               aes(x = Month, y = Freq,
-                   color = Var2noBreak, group = Var2noBreak)) +
-  gggrid::grid_group(add_label,
-                     aes(label = Var2noBreak,
-                         highlight = highlightCat)) +
-  scale_color_manual(values = colors) +
-  theme_minimal() +
-  theme(axis.ticks = element_blank(),
-        axis.text = element_text(colour = "white"),
-        axis.title = element_text(colour = "white"),
-        panel.grid.major.x = element_blank(),
-        panel.grid.minor.x = element_blank(),
-        panel.grid.major.y = element_blank(),
-        panel.grid.minor.y = element_blank())
-
-create_plot <- function() {
+  
+  lwds_vec <- setNames(rep(lwds[1], length(monthLabels)), monthLabels)
+  lwds_vec[highlightCats] <- lwds[2]
+  
+  add_label <- function(data, coords) {
+    grid::textGrob(
+      data$label,
+      x = grid::unit(0, "npc") - grid::unit(2, "mm"),
+      y = grid::unit(coords$y[1], "npc"),
+      gp = grid::gpar(col = data$colour,
+                      fontsize = label.fontsize,
+                      fontface = ifelse(data$highlight, "bold", "plain")),
+      hjust = 1
+    )
+  }
+  p <- ggplot(youthMonthType,
+              aes(x = Month, y = Freq,
+                  color = Var2noBreak, group = Var2noBreak, linewidth = Var2noBreak)) +
+    geom_line(show.legend = FALSE) +
+    scale_color_manual(values = colors) +
+    scale_linewidth_manual(values = lwds_vec) +
+    scale_y_continuous(position = "right") +
+    scale_x_date(expand = expansion(0, 0)) + 
+    labs(x = "", y = "") +
+    theme_minimal() +
+    theme(axis.ticks.y = element_blank(),
+          panel.grid.major.x = element_blank(),
+          panel.grid.minor.x = element_blank(),
+          panel.grid.minor.y = element_blank()
+    ) +
+    gggrid::grid_group(add_label,
+                       aes(label = Var2noBreak,
+                           highlight = highlightCat)) +
+    coord_cartesian(clip = "off")
+  
   grid::grid.newpage()
   grid::pushViewport(
     grid::viewport(
-      width = grid::unit(1, "npc") - text_width - grid::unit(2*2, "mm"),
-      x = grid::unit(1, "npc") - grid::unit(2, "mm"),
+      width = grid::unit(1, "npc") - text_width - grid::unit(2, "mm"),
+      x = grid::unit(1, "npc"),
       just = c(1, .5)
     )
   )
   print(p, newpage = FALSE)
-  grid::upViewport()
-  grid::pushViewport(
-    grid::viewport(
-      width = text_width,
-      x = grid::unit(2, "mm"),
-      just = c(0, .5)
-    )
-  )
-  grid::grid.rect(gp = grid::gpar(col = "grey70"))
-  print(p_text, newpage = FALSE)
-  grid::upViewport()
+  grid::popViewport()
   return(invisible())
 }
 
 create_plot()
 ```
-
 
 # Overall summary
 
