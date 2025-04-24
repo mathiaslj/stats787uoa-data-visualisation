@@ -17,6 +17,7 @@ Loading packages.
 ```{r message = FALSE, warning = FALSE}
 library(tidyverse)
 library(grid)
+library(ggtext)
 ```
 
 # The data and questions of interest
