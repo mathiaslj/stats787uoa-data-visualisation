@@ -357,10 +357,12 @@ The trend seems to be the same overall. We identified in question 1 that the ove
 
 ## Challenge
 
-I download the font online, extract the ZIP file locally, and use the Windows interface to install the font. Then, using Cairo graphics, I can refer to the name of the font on my system to use it.
+Download the font online, extract the ZIP file locally, and use the Windows interface to install the font. Then, using Cairo graphics, I can refer to the name of the font on my system to use it.
+
+> Here we just use a standard font to avoid issues with running in CI.
 
 ```{r, fig.height=8, fig.width=8}
-darkplot2(fontfamily = "Gruppo")
+darkplot2(fontfamily = "Times New Roman")
 ```
 
 # Overall summary
