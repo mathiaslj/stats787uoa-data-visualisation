@@ -367,6 +367,6 @@ darkplot2(fontfamily = "Times New Roman")
 
 # Overall summary
 
-The CRAP design principles **contract**, **repetition**, **alignment** and **proximity** gives a basic framework to create and critique plots in regards to aspects that are known to improve "readability" of a plot for most people.
+The CRAP design principles **contrast**, **repetition**, **alignment** and **proximity** gives a basic framework to create and critique plots in regards to aspects that are known to improve "readability" of a plot for most people.
 
 In this lab we see that plots showing the exact same data can be made easier to interpret using these simple principles, as illustrated by the plot in question 2 that employs more of the principles than question 1. In question 3 we see especially how contrast can be taken advantage of to really create an even more extreme pre-attentive pop-out, and we see how repetition, alignment and proximity can be used effectively to create a small multiples plot with direct labelling.
