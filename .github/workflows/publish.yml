@@ -37,7 +37,7 @@ jobs:
             ggtext
             magick
             gganimate
-            plotply
+            plotly
             plotscaper
           
       - name: Render and Publish
