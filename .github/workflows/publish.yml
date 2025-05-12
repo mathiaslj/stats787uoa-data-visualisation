@@ -35,6 +35,10 @@ jobs:
             ggthemes
             paletteer
             ggtext
+            magick
+            gganimate
+            plotply
+            plotscaper
           
       - name: Render and Publish
         uses: quarto-dev/quarto-actions/publish@v2
