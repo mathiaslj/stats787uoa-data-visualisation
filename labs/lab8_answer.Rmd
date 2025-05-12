@@ -7,13 +7,6 @@ output:
     theme: tactile
 ---
 
-- Lecture notes: Code uses `coord_quickmap`, but documentation says it's superseded and should not be used in new code. Instead, should use `coord_sf(crs = sf::st_crs(4326))`.
-- Q1: How did you use hjust to avoid overlap? I found a solution, but might be more complicated than it needs to be.
-- Q6 and Q7: 
-- Challenge: Use of `grid_group`? Is it possible to use viewports inside the function of data and coords?
-- Challenge: How did you avoid overlap?
-
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
   dev.args = list(png = list(type = "cairo"))
