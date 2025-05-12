@@ -1,0 +1,383 @@
+---
+title: "Lab8 - Maps"
+author: Mathias L. Jeppesen
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: 
+  prettydoc::html_pretty:
+    theme: tactile
+---
+
+- Lecture notes: Code uses `coord_quickmap`, but documentation says it's superseded and should not be used in new code. Instead, should use `coord_sf(crs = sf::st_crs(4326))`.
+- Q1: How did you use hjust to avoid overlap? I found a solution, but might be more complicated than it needs to be.
+- Q6 and Q7: 
+- Challenge: Use of `grid_group`? Is it possible to use viewports inside the function of data and coords?
+- Challenge: How did you avoid overlap?
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  dev.args = list(png = list(type = "cairo"))
+)
+```
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+library(tidyverse)
+```
+
+# The data and questions of interest
+
+## Crime data
+
+Data shows rows of incidents handled by the Police.
+
+```{r}
+crime <- read.csv("nzpolice-proceedings.csv")
+```
+
+Create `Month` as a `Date`, `Year` as a `POSIXlt` and alter `Police.District` a bit.
+
+```{r}
+crime$Month <- as.Date(crime$Date)
+crime$Year <- as.POSIXlt(crime$Date)$year + 1900
+crime$Police.District <- gsub("Of", "of", crime$Police.District)
+```
+
+Drop year with partial data
+
+```{r}
+crime <- subset(crime, Year >= 2015)
+```
+
+Generate totals counts pr. police district.
+
+```{r}
+crimePerDistrict <- count(crime, Police.District)
+```
+
+Generate totals counts each year pr. police district.
+
+```{r}
+crimeYearPerDistrict <- count(crime, Police.District, Year)
+```
+
+Counts for each crime type pr. police district.
+
+```{r}
+crimeTypePerDistrict <- count(crime, Police.District, ANZSOC.Division)
+```
+
+## Map data
+
+```{r, message = FALSE}
+library(sf)
+```
+
+Map data for the Police Districts was obtained from [Koordinates](https://koordinates.com/layer/105480-nz-police-district-boundaries-29-april-2021/).
+
+```{r}
+districts <- st_read("nz-police-district-boundaries-29-april-2021.shp")
+```
+
+Add centroids.
+
+```{r}
+centroids <- st_coordinates(st_centroid(st_geometry(districts)))
+districts$X <- centroids[,1]
+districts$Y <- centroids[,2]
+```
+
+## Combined data
+
+Combine the crime and map data.
+
+```{r}
+crimeDistricts <- inner_join(districts, crimePerDistrict,
+                             by=join_by(DISTRICT_N == Police.District))
+
+crimeTypeDistricts <- inner_join(districts, crimeTypePerDistrict,
+                                 by=join_by(DISTRICT_N == Police.District))
+
+crimeYearDistricts <- inner_join(districts, crimeYearPerDistrict,
+                                 by=join_by(DISTRICT_N == Police.District))
+```
+
+## Questions of interest
+
+Questions of interest are:
+
+- Which Police Districts have the most incidents?
+- How does the number of incidents change over time in each District?
+- What types of crime are more common than others in each District?
+- Are there obvious differences between North Island and South Island crime?
+
+# Data visualisations and questions
+
+## Question 1
+
+We create the map plot with labels for districts simply by running `geom_sf()` to create the map, and then calling `geom_sf_text` to layer text on top of the map.
+
+We use `hjust` as an aesthetic, where we center the text label of the district according to its position on the map when it's not overlapping with another district. Where districts are overlapping, we ensure right-alignment of the text of left-most district, and left-alignment of the text of the right-most district to avoid overlapping text labels.
+
+```{r}
+add_hjust <- function(data = districts, close_prox = 5*1e4) {
+  Yclose_pairs <- which(
+    as.matrix(dist(districts$Y)) < close_prox,
+    arr.ind = TRUE
+  ) %>% 
+    as.data.frame() %>% 
+    filter(row != col) %>% 
+    slice_head(n = nrow(.)/2)
+  
+  res <- data %>% 
+    mutate(hjust = .5)
+  
+  for (i in 1:nrow(Yclose_pairs)) {
+    Yclose_pair <- as.numeric(Yclose_pairs[i, ])
+    res[Yclose_pair, ] <- res[Yclose_pair, ] %>% 
+      mutate(hjust = case_when(X < lag(X) ~ 1,
+                               X < lead(X) ~ 1,
+                               TRUE ~ 0))
+  }
+  return(res)
+}
+
+ggplot(add_hjust(districts)) +
+  geom_sf() +
+  geom_sf_text(aes(label = DISTRICT_N, hjust = hjust), size = 3)
+```
+
+## Question 2
+
+To produce this plot, we simply use the joined data containing information needed for the map as well as information about the incidence rate of crimes in each district. We can then create the map with `geom_sf` and specify the incidence rate `n` as the `fill` aesthetic.
+
+```{r}
+ggplot(crimeDistricts) +
+  geom_sf(aes(fill = n))
+```
+
+### Questions of interest
+
+This map can be used to identify which Police Districts have the most incidents but does not show anything about number of incidents dependent on crime type or year. In regards to answering the "simple" question of which district has the most incidents, this plot can help answer it, but if the reader is not familiar with New Zealand police districts, one could argue there is a *substantive* issue with the plot due to missing labels.
+
+However, no matter if you know the districts or not, it is apparent from the plot that there is more crime on the northern island.
+
+### Major substantive problem
+
+The *major substantive problem* however with this plot is that incidents are shown in absolute numbers and are not adjusted according to the population within the police district.
+
+### Visual channel
+
+According to Kieran Healy's list of visual channels ordered by effectiveness, *color luminance* is not a very effective visual channel for continuous data. However, when plotting maps, *position*, *length* and *tilt/angle* are not not viable visual channels, meaning we don't have many options. Decoding values exactly is impossible task from this plot, but it does give quite a good idea the relative differences between police districts.
+
+## Question 3
+
+We create this plot by adding points with the location of the centroids by simply layering them on top with `geom_point`, using the centroids' X- and Y-positions as the `x` and `y` aesthetic, specifying the incidence rate `n` as the size aesthetic and making the points semitransparent through the `alpha` argument.
+
+```{r}
+ggplot(crimeDistricts) +
+  geom_sf() +
+  geom_point(aes(x = X, y = Y, size = n), fill = "black", alpha = 0.5)
+```
+
+This plot says the same about the questions of interest as above, just utilising *area* as a visual channel rather than *color luminance*. In Kieran Healy's scale of visual channels for continuous data, this should be better than color, but since we are just displaying a quite small point inside a region on a map, I think the colour visual channel works better in this case.
+
+## Question 4
+
+We create the animation with `gganimate` by switching states between years with the `transition_states` function. We add a title showing the current state by utilising the `glue` syntax.
+
+```{r}
+library(gganimate)
+
+ggplot(crimeYearDistricts) +
+  geom_sf(aes(fill = n)) +
+  transition_states(Year, transition_length = 0) +
+  labs(title = "Year: {closest_state}")
+```
+
+The animation shows a general trend that crime is decreasing within all police districts by seeing that the regions become darker throughout time. By keeping an open eye, we can see a few cases of an increase from year to the next before it then decreases again afterwards. This looks to be true fx. for Auckland between years 2018 and 2019. However, these kinds of animation are much better at showing the general downward trend across police districts than trying to "catch" single-year differences.
+
+## Question 5
+
+We create the simple line plot.
+
+```{r}
+ggplot(crimeYearPerDistrict, aes(x = Year, y = n, color = Police.District)) +
+  geom_line()
+```
+
+This plot makes it easier to see nuances in the general downward trend that was visible in the animation. We can see small increases fx. for *Auckland* from 2018 to 2019, from *Counties/Manukau* from 2015 to 2016, etc.
+
+However, this plot makes it much harder to identify the police districts. According to Kieran Healy's scale of effective visual channels to decode categorical data, *position in space* is more effective than *color hue*. In addition to this being generally true, we here have 12 police districts, meaning we have 12 different hues. According to Wilke, a rule of thumb is to be careful with using more than 5 different color hues to identify categorical variables.
+
+The animation and (a variation of) the plot can works in unison.
+
+## Question 6
+
+Ideas for color scale?
+
+- `scale_fill_viridis_c` might be nicer and easier to see. However, still does not fix problem of many being very dark and showing no nuance. Could also do individual scales for each. But then it's not possible to relate numbers from each crime type...
+
+```{r}
+ggplot(crimeTypeDistricts) +
+  geom_sf(aes(fill = n), show.legend = FALSE) +
+  facet_wrap(~ ANZSOC.Division, nrow = 3) +
+  theme(axis.ticks = element_blank(),
+        axis.text = element_blank(),
+        strip.text = element_text(hjust = 0))
+```
+
+### Questions of interest
+
+This plot attempts to answer the question about distribution of crime types across different police districts. However, it does a poor job of this, as we have facetted by crime type, meaning we have to compare the colour of a certain position in each facet. This is the nature of the map plot that we cannot facet by police district rather than crime type to get the values next to each other.
+
+Comparing values across facets is hard enough as it is, but then we also have to do the comparison based on a continuous colour luminance scale, where especially low incidence crime types are just all dark, and it's hard to spot any differences.
+
+## Question 7
+
+### Compare hights within crime type
+
+Direct labelling:
+
+```{r direct-label, fig.height=20}
+library(grid)
+
+add_label <- function(data, coords) {
+  textGrob(data$label,
+           x = coords$x,
+           y = unit(coords$y, "npc") + unit(2, "mm"),
+           gp = gpar(fontsize = 10),
+           rot = 60, hjust = 0)
+}
+
+ggplot(crimeTypePerDistrict, aes(x = Police.District, y = n)) +
+  geom_col(color = "black", fill = "white", show.legend = FALSE) +
+  facet_wrap(~ ANZSOC.Division, ncol = 1) +
+  gggrid::grid_panel(add_label, aes(label = Police.District)) +
+  scale_y_continuous(expand = expansion(add = c(0, 14.5*1e3))) +
+  theme(axis.text.x = element_blank(),
+        axis.ticks.x = element_blank())
+```
+
+Color and a legend:
+
+```{r color-legend, fig.height=20}
+library(grid)
+
+
+ggplot(crimeTypePerDistrict, aes(x = Police.District, y = n, fill = Police.District)) +
+  geom_col() +
+  facet_wrap(~ ANZSOC.Division, ncol = 1) +
+  theme(axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        axis.title = element_blank(),
+        legend.position = "top") +
+  guides(fill = guide_legend(nrow = 1))
+```
+
+### Compare hights within each district
+
+Coloring
+
+```{r, fig.height=20}
+library(grid)
+ggplot(crimeTypePerDistrict, aes(x = ANZSOC.Division, y = n, fill = ANZSOC.Division)) +
+  geom_col() +
+  facet_wrap(~ Police.District, ncol = 1) +
+  theme(axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        axis.title = element_blank(),
+        legend.position = "top") +
+  guides(fill = guide_legend(nrow = 2)) +
+  labs(fill = "")
+```
+
+Animation
+
+```{r}
+anim <- ggplot(crimeTypePerDistrict, aes(x = ANZSOC.Division, y = n, group = Police.District)) +
+  geom_col(color = "black", fill = "white") +
+  coord_flip() +
+  # gggrid::grid_panel(add_label, aes(label = ANZSOC.Division)) +
+  transition_states(Police.District, transition_length = 0) +
+  labs(title = "Police District: {closest_state}") +
+  theme(axis.ticks.x = element_blank(),
+        axis.title = element_blank())
+
+animate(anim, fps = 1)
+```
+
+
+### Questions of interest
+
+The map plots are better at answering the questions about differences between crime in the northern island and southern island, as those are mapped by position in the map plots. Since we have nothing indicating whether or not the police district is in the northern or southern island in this histogram, it's practically impossible to answer that question.
+
+However, I do think this plot does a better job of showing the differences in showing what types of crimes are more common within each district, as we can more easily decode the incidence rates from the histogram that uses visual channel of position/length versus the visual channel of colour luminance on the map plot. Especially for the low incidence crime types, it's almost impossible to spot any differences in the map plot. It's still hard to see on the histogram, but it's at least possible to spot differences.
+
+## Challenge
+
+We create the plot by using `grid_group` from `gggrid`.
+
+```{r}
+library(gggrid)
+
+map_boxes <- function(box_side = unit(1.3, "cm"), data = crimeYearDistricts) {
+  
+  freq_diff <- max(data$n)
+  year_diff <- max(data$Year) - min(data$Year)
+  
+  add_district <- function(data, coords) {
+    x_pos <- unique(coords$x)
+    y_pos <- unique(coords$y)
+    
+    label <- textGrob(
+      data$label, x = x_pos,
+      y = unit(y_pos, "npc") + unit(1, "mm"),
+      just = c(0, 0)
+    )
+    
+    rect <- rectGrob(
+      x = unit(x_pos, "npc"),
+      y = unit(y_pos, "npc"),
+      width = box_side,
+      height = box_side,
+      just = c(0, 1)
+    )
+    
+    rect_bot <- unit(y_pos, "npc") - box_side
+    rect_height_npc <- unit(y_pos, "npc") - rect_bot
+    npc_pr_freq <- rect_height_npc / freq_diff
+    y_line_npc <- rect_bot + data$y_line * npc_pr_freq
+    
+    rect_right <- unit(x_pos, "npc") + box_side
+    rect_width_npc <- rect_right - unit(x_pos, "npc")
+    npc_pr_year <- rect_width_npc / year_diff
+    x_line_npc <- unit(x_pos, "npc") + (data$x_line - min(data$x_line)) * npc_pr_year
+    
+    lines <- linesGrob(x = x_line_npc, y = y_line_npc)
+    
+    grobTree(label, rect, lines)
+  }
+  
+  p <- ggplot(crimeYearDistricts, aes(group = DISTRICT_N, x = X, y = Y)) +
+    geom_sf() +
+    grid_group(add_district,
+               aes(label = DISTRICT_N,
+                   x_line = Year, y_line = n))
+  
+  return(p)
+}
+
+map_boxes(unit(1, "cm"))
+```
+
+This plot does a much better job of answering questions of interest. It combines plots from Q4 and Q5 and employs position as the visual channel both for the categorical variable of police district as well as for the incidence rate. Amazing plot!
+
+# Overall summary
+
+Map plots can be a powerful tool when wanting to show data that relates to geographical positions.
+
+A **challenge** with map plots is however that we no longer have some of the strongest visual channels for continuous data available to us. Specifically it can be difficult to show continuous data using *position*, *length* or *area*.
+
+This means we often resort to using color (luminance/saturation), which can be very hard to decode, as seen in question 2. We still have other visual channels available like area, which we use in question 3 when we display the incidence rate by the size of a point in the centroid of each region. This, however, is also very hard to decode data from. The same thoughts apply when trying to display data across time or crime types.
+
+The challenge shows a way to circumvent the challenge of not having strong visual channels available by using *position* to display the continuous data within our map. A win-win!
