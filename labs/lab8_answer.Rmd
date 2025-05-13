@@ -9,9 +9,12 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
-  dev.args = list(png = list(type = "cairo"))
+  dev.args = list(png = list(type = "cairo")),
+  eval = FALSE
 )
 ```
+
+> Note that no chunks are evaluated in this assignment as there is a problem with executing the `geom_sf` function in the CI. It works fine locally, so leaving the code to look at and run locally.
 
 ```{r echo = FALSE, message = FALSE, warning = FALSE}
 library(tidyverse)
