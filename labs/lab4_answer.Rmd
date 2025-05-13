@@ -180,6 +180,7 @@ Regarding the categories “Public Order Offences” and “Dangerous or Neglige
 What "pops out" immediately is the coloring of the lines according to crime types as well as the highlighted lines with a white background
 
 **Gestalt rules**
+
 - *Connection:* The lines are coloured within each crime type, making a connection between the data points that make out each line
 - *Figure and Ground:* We use the fact that our plot is layered to have a grey background and then use the contrast of white to highlight our colored lines
 - *Common fate:* Almost all of the lines are moving downward (except the one we commented on above), meaning we quickly associate the same trend to almost all crime types
