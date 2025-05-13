@@ -11,7 +11,7 @@
     "href": "labs/lab2_answer.html",
     "title": "Lab2 - The grid Graphics System",
     "section": "",
-    "text": "Loading packages.\n\nlibrary(ggplot2)\nlibrary(grid)\nlibrary(tidyverse)",
+    "text": "See the assignment description and model answer (for the source .Rmd model answer, just change “html” to “Rmd” in the link).\nLoading packages.\nlibrary(ggplot2)\nlibrary(grid)\nlibrary(tidyverse)",
     "crumbs": [
       "Lab assignments",
       "Lab2 - The `grid` Graphics System"
@@ -143,7 +143,7 @@
     "href": "labs/lab8_answer.html",
     "title": "Lab8 - Maps",
     "section": "",
-    "text": "Note that no chunks are evaluated in this assignment as there is a problem with executing the geom_sf function in the CI. It works fine locally, so leaving the code to look at and run locally.",
+    "text": "See the assignment description and model answer (for the source .Rmd model answer, just change “html” to “Rmd” in the link).",
     "crumbs": [
       "Lab assignments",
       "Lab8 - Maps"
@@ -286,7 +286,7 @@
     "href": "labs/lab1_answer.html",
     "title": "Lab1 - Grammar of Graphics",
     "section": "",
-    "text": "Loading packages.\nlibrary(ggplot2)\nlibrary(tidyverse)",
+    "text": "See the assignment description and model answer (for the source .Rmd model answer, just change “html” to “Rmd” in the link).\nLoading packages.\nlibrary(ggplot2)\nlibrary(tidyverse)",
     "crumbs": [
       "Lab assignments",
       "Lab1 - Grammar of Graphics"
@@ -407,7 +407,7 @@
     "href": "labs/lab5_answer.html",
     "title": "Lab5 - Graphic Design",
     "section": "",
-    "text": "Loading packages.\nlibrary(tidyverse)\nlibrary(grid)\nlibrary(ggtext)",
+    "text": "See the assignment description and model answer (for the source .Rmd model answer, just change “html” to “Rmd” in the link).\nLoading packages.\nlibrary(tidyverse)\nlibrary(grid)\nlibrary(ggtext)",
     "crumbs": [
       "Lab assignments",
       "Lab5 - Graphic Design"
@@ -473,7 +473,7 @@
     "href": "labs/lab7_answer.html",
     "title": "Lab7 - Interactive Graphics",
     "section": "",
-    "text": "Loading packages.\nlibrary(tidyverse)\nlibrary(grid)\nlibrary(plotly)\nlibrary(plotscaper)",
+    "text": "See the assignment description and model answer (for the source .Rmd model answer, just change “html” to “Rmd” in the link).\nLoading packages.\nlibrary(tidyverse)\nlibrary(grid)\nlibrary(plotly)\nlibrary(plotscaper)",
     "crumbs": [
       "Lab assignments",
       "Lab7 - Interactive Graphics"
@@ -517,7 +517,7 @@
     "href": "labs/lab4_answer.html",
     "title": "Lab4 - Visual Perception",
     "section": "",
-    "text": "Loading packages.\nlibrary(tidyverse)\nlegend_text_size &lt;- 6",
+    "text": "See the assignment description and model answer (for the source .Rmd model answer, just change “html” to “Rmd” in the link).\nLoading packages.\nlibrary(tidyverse)\nlegend_text_size &lt;- 6",
     "crumbs": [
       "Lab assignments",
       "Lab4 - Visual Perception"
@@ -605,7 +605,7 @@
     "href": "labs/lab3_answer.html",
     "title": "Lab3 - Effective Data Visualisations",
     "section": "",
-    "text": "Loading packages.\nlibrary(tidyverse)",
+    "text": "See the assignment description and model answer (for the source .Rmd model answer, just change “html” to “Rmd” in the link).\nLoading packages.\nlibrary(tidyverse)",
     "crumbs": [
       "Lab assignments",
       "Lab3 - Effective Data Visualisations"
@@ -693,7 +693,7 @@
     "href": "labs/lab6_answer.html",
     "title": "Lab6 - Animation",
     "section": "",
-    "text": "Loading packages.\nlibrary(tidyverse)\nlibrary(grid)\nlibrary(magick)\nlibrary(gganimate)",
+    "text": "See the assignment description and model answer (for the source .Rmd model answer, just change “html” to “Rmd” in the link).\nLoading packages.\nlibrary(tidyverse)\nlibrary(grid)\nlibrary(magick)\nlibrary(gganimate)",
     "crumbs": [
       "Lab assignments",
       "Lab6 - Animation"
