@@ -7,6 +7,8 @@ output:
     theme: tactile
 ---
 
+See the [assignment description](https://www.stat.auckland.ac.nz/~paul/stats787/Current/Labs/animation.html) and [model answer](https://www.stat.auckland.ac.nz/~paul/stats787/Current/Labs/animation-model.html) (for the source .Rmd model answer, just change "html" to "Rmd" in the link).
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
   dev.args = list(png = list(type = "cairo"))
