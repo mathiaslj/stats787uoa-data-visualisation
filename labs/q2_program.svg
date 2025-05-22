@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="500" height="600">
+  <svg x="0" y="0" width="500" height="50">
+    <text x="0" y="20" font-size="18" font-family="sans-serif" text-anchor="start">Auckland City</text>
+    <svg x="0" y="25" width="500" height="25" viewBox="0 0 1 1" preserveAspectRatio="none">
+      <rect width="0.260044660285139" height="1" fill="#E46C0A">
+        <animate attributeName="width" from="0" to="0.260044660285139" dur="1s" fill="freeze"/>
+        <title>26.0% of crimes were commited by Females in Auckland City</title>
+      </rect>
+      <rect x="0.260044660285139" width="0.739955339714861" height="1" fill="#0070C0">
+        <animate attributeName="width" from="0" to="0.739955339714861" dur="1s" fill="freeze"/>
+        <animate attributeName="x" from="1" to="0.260044660285139" dur="1s" fill="freeze"/>
+        <title>74.0% of crimes were commited by Males in Auckland City</title>
+      </rect>
+    </svg>
+  </svg>
+  <svg x="0" y="50" width="500" height="50">
+    <text x="0" y="20" font-size="18" font-family="sans-serif" text-anchor="start">Tasman</text>
+    <svg x="0" y="25" width="500" height="25" viewBox="0 0 1 1" preserveAspectRatio="none">
+      <rect width="0.267037948452273" height="1" fill="#E46C0A">
+        <animate attributeName="width" from="0" to="0.267037948452273" dur="1s" fill="freeze"/>
+        <title>26.7% of crimes were commited by Females in Tasman</title>
+      </rect>
+      <rect x="0.267037948452273" width="0.732962051547727" height="1" fill="#0070C0">
+        <animate attributeName="width" from="0" to="0.732962051547727" dur="1s" fill="freeze"/>
+        <animate attributeName="x" from="1" to="0.267037948452273" dur="1s" fill="freeze"/>
+        <title>73.3% of crimes were commited by Males in Tasman</title>
+      </rect>
+    </svg>
+  </svg>
+  <svg x="0" y="100" width="500" height="50">
+    <text x="0" y="20" font-size="18" font-family="sans-serif" text-anchor="start">Waitemata</text>
+    <svg x="0" y="25" width="500" height="25" viewBox="0 0 1 1" preserveAspectRatio="none">
+      <rect width="0.270004455519068" height="1" fill="#E46C0A">
+        <animate attributeName="width" from="0" to="0.270004455519068" dur="1s" fill="freeze"/>
+        <title>27.0% of crimes were commited by Females in Waitemata</title>
+      </rect>
+      <rect x="0.270004455519068" width="0.729995544480932" height="1" fill="#0070C0">
+        <animate attributeName="width" from="0" to="0.729995544480932" dur="1s" fill="freeze"/>
+        <animate attributeName="x" from="1" to="0.270004455519068" dur="1s" fill="freeze"/>
+        <title>73.0% of crimes were commited by Males in Waitemata</title>
+      </rect>
+    </svg>
+  </svg>
+  <svg x="0" y="150" width="500" height="50">
+    <text x="0" y="20" font-size="18" font-family="sans-serif" text-anchor="start">Wellington</text>
+    <svg x="0" y="25" width="500" height="25" viewBox="0 0 1 1" preserveAspectRatio="none">
+      <rect width="0.271174129064125" height="1" fill="#E46C0A">
+        <animate attributeName="width" from="0" to="0.271174129064125" dur="1s" fill="freeze"/>
+        <title>27.1% of crimes were commited by Females in Wellington</title>
+      </rect>
+      <rect x="0.271174129064125" width="0.728825870935875" height="1" fill="#0070C0">
+        <animate attributeName="width" from="0" to="0.728825870935875" dur="1s" fill="freeze"/>
+        <animate attributeName="x" from="1" to="0.271174129064125" dur="1s" fill="freeze"/>
+        <title>72.9% of crimes were commited by Males in Wellington</title>
+      </rect>
+    </svg>
+  </svg>
+  <svg x="0" y="200" width="500" height="50">
+    <text x="0" y="20" font-size="18" font-family="sans-serif" text-anchor="start">Southern</text>
+    <svg x="0" y="25" width="500" height="25" viewBox="0 0 1 1" preserveAspectRatio="none">
+      <rect width="0.271348261076703" height="1" fill="#E46C0A">
+        <animate attributeName="width" from="0" to="0.271348261076703" dur="1s" fill="freeze"/>
+        <title>27.1% of crimes were commited by Females in Southern</title>
+      </rect>
+      <rect x="0.271348261076703" width="0.728651738923297" height="1" fill="#0070C0">
+        <animate attributeName="width" from="0" to="0.728651738923297" dur="1s" fill="freeze"/>
+        <animate attributeName="x" from="1" to="0.271348261076703" dur="1s" fill="freeze"/>
+        <title>72.9% of crimes were commited by Males in Southern</title>
+      </rect>
+    </svg>
+  </svg>
+  <svg x="0" y="250" width="500" height="50">
+    <text x="0" y="20" font-size="18" font-family="sans-serif" text-anchor="start">Bay Of Plenty</text>
+    <svg x="0" y="25" width="500" height="25" viewBox="0 0 1 1" preserveAspectRatio="none">
+      <rect width="0.290506150148452" height="1" fill="#E46C0A">
+        <animate attributeName="width" from="0" to="0.290506150148452" dur="1s" fill="freeze"/>
+        <title>29.1% of crimes were commited by Females in Bay Of Plenty</title>
+      </rect>
+      <rect x="0.290506150148452" width="0.709493849851548" height="1" fill="#0070C0">
+        <animate attributeName="width" from="0" to="0.709493849851548" dur="1s" fill="freeze"/>
+        <animate attributeName="x" from="1" to="0.290506150148452" dur="1s" fill="freeze"/>
+        <title>70.9% of crimes were commited by Males in Bay Of Plenty</title>
+      </rect>
+    </svg>
+  </svg>
+  <svg x="0" y="300" width="500" height="50">
+    <text x="0" y="20" font-size="18" font-family="sans-serif" text-anchor="start">Canterbury</text>
+    <svg x="0" y="25" width="500" height="25" viewBox="0 0 1 1" preserveAspectRatio="none">
+      <rect width="0.290930312598201" height="1" fill="#E46C0A">
+        <animate attributeName="width" from="0" to="0.290930312598201" dur="1s" fill="freeze"/>
+        <title>29.1% of crimes were commited by Females in Canterbury</title>
+      </rect>
+      <rect x="0.290930312598201" width="0.709069687401799" height="1" fill="#0070C0">
+        <animate attributeName="width" from="0" to="0.709069687401799" dur="1s" fill="freeze"/>
+        <animate attributeName="x" from="1" to="0.290930312598201" dur="1s" fill="freeze"/>
+        <title>70.9% of crimes were commited by Males in Canterbury</title>
+      </rect>
+    </svg>
+  </svg>
+  <svg x="0" y="350" width="500" height="50">
+    <text x="0" y="20" font-size="18" font-family="sans-serif" text-anchor="start">Northland</text>
+    <svg x="0" y="25" width="500" height="25" viewBox="0 0 1 1" preserveAspectRatio="none">
+      <rect width="0.291545880988774" height="1" fill="#E46C0A">
+        <animate attributeName="width" from="0" to="0.291545880988774" dur="1s" fill="freeze"/>
+        <title>29.2% of crimes were commited by Females in Northland</title>
+      </rect>
+      <rect x="0.291545880988774" width="0.708454119011226" height="1" fill="#0070C0">
+        <animate attributeName="width" from="0" to="0.708454119011226" dur="1s" fill="freeze"/>
+        <animate attributeName="x" from="1" to="0.291545880988774" dur="1s" fill="freeze"/>
+        <title>70.8% of crimes were commited by Males in Northland</title>
+      </rect>
+    </svg>
+  </svg>
+  <svg x="0" y="400" width="500" height="50">
+    <text x="0" y="20" font-size="18" font-family="sans-serif" text-anchor="start">Waikato</text>
+    <svg x="0" y="25" width="500" height="25" viewBox="0 0 1 1" preserveAspectRatio="none">
+      <rect width="0.292708784399218" height="1" fill="#E46C0A">
+        <animate attributeName="width" from="0" to="0.292708784399218" dur="1s" fill="freeze"/>
+        <title>29.3% of crimes were commited by Females in Waikato</title>
+      </rect>
+      <rect x="0.292708784399218" width="0.707291215600782" height="1" fill="#0070C0">
+        <animate attributeName="width" from="0" to="0.707291215600782" dur="1s" fill="freeze"/>
+        <animate attributeName="x" from="1" to="0.292708784399218" dur="1s" fill="freeze"/>
+        <title>70.7% of crimes were commited by Males in Waikato</title>
+      </rect>
+    </svg>
+  </svg>
+  <svg x="0" y="450" width="500" height="50">
+    <text x="0" y="20" font-size="18" font-family="sans-serif" text-anchor="start">Counties/Manukau</text>
+    <svg x="0" y="25" width="500" height="25" viewBox="0 0 1 1" preserveAspectRatio="none">
+      <rect width="0.293579482258522" height="1" fill="#E46C0A">
+        <animate attributeName="width" from="0" to="0.293579482258522" dur="1s" fill="freeze"/>
+        <title>29.4% of crimes were commited by Females in Counties/Manukau</title>
+      </rect>
+      <rect x="0.293579482258522" width="0.706420517741478" height="1" fill="#0070C0">
+        <animate attributeName="width" from="0" to="0.706420517741478" dur="1s" fill="freeze"/>
+        <animate attributeName="x" from="1" to="0.293579482258522" dur="1s" fill="freeze"/>
+        <title>70.6% of crimes were commited by Males in Counties/Manukau</title>
+      </rect>
+    </svg>
+  </svg>
+  <svg x="0" y="500" width="500" height="50">
+    <text x="0" y="20" font-size="18" font-family="sans-serif" text-anchor="start">Central</text>
+    <svg x="0" y="25" width="500" height="25" viewBox="0 0 1 1" preserveAspectRatio="none">
+      <rect width="0.302394487048855" height="1" fill="#E46C0A">
+        <animate attributeName="width" from="0" to="0.302394487048855" dur="1s" fill="freeze"/>
+        <title>30.2% of crimes were commited by Females in Central</title>
+      </rect>
+      <rect x="0.302394487048855" width="0.697605512951145" height="1" fill="#0070C0">
+        <animate attributeName="width" from="0" to="0.697605512951145" dur="1s" fill="freeze"/>
+        <animate attributeName="x" from="1" to="0.302394487048855" dur="1s" fill="freeze"/>
+        <title>69.8% of crimes were commited by Males in Central</title>
+      </rect>
+    </svg>
+  </svg>
+  <svg x="0" y="550" width="500" height="50">
+    <text x="0" y="20" font-size="18" font-family="sans-serif" text-anchor="start">Eastern</text>
+    <svg x="0" y="25" width="500" height="25" viewBox="0 0 1 1" preserveAspectRatio="none">
+      <rect width="0.313027363772573" height="1" fill="#E46C0A">
+        <animate attributeName="width" from="0" to="0.313027363772573" dur="1s" fill="freeze"/>
+        <title>31.3% of crimes were commited by Females in Eastern</title>
+      </rect>
+      <rect x="0.313027363772573" width="0.686972636227427" height="1" fill="#0070C0">
+        <animate attributeName="width" from="0" to="0.686972636227427" dur="1s" fill="freeze"/>
+        <animate attributeName="x" from="1" to="0.313027363772573" dur="1s" fill="freeze"/>
+        <title>68.7% of crimes were commited by Males in Eastern</title>
+      </rect>
+    </svg>
+  </svg>
+</svg>

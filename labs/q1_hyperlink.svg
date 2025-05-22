@@ -1,0 +1,19 @@
+<svg version="1.1"
+     width="500" height="100"
+     xmlns="http://www.w3.org/2000/svg">
+  <a href="https://www.police.govt.nz/about-us/publications-statistics/data-and-statistics/policedatanz/proceedings-offender-demographics">
+    <text x="0" y="45"
+      font-size="28"
+      font-family="sans-serif"
+      text-anchor="start">
+        Youth Crime:
+        <tspan fill="#E46C0A">Female</tspan>
+        versus
+        <tspan fill="#0070C0">Male</tspan>
+    </text>
+  </a>
+  <svg y="50" width="500" height = "50" viewBox="0 0 100 100" preserveAspectRatio="none">
+    <rect width="28.53506" height="100" fill="#E46C0A" />
+    <rect x="28.53506" width="100" height="100" fill="#0070C0" />
+  </svg>
+</svg>

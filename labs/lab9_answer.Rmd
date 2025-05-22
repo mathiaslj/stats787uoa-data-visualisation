@@ -1,0 +1,478 @@
+---
+title: "Lab 9 - SVG graphics"
+author: Mathias L. Jeppesen
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: 
+  prettydoc::html_pretty:
+    theme: tactile
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  dev.args = list(png = list(type = "cairo"))
+)
+```
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+library(tidyverse)
+```
+
+# The data and questions of interest
+
+## Crime data
+
+Data shows rows of incidents handled by the Police. 
+
+```{r}
+crime <- read.csv("nzpolice-proceedings.csv")
+```
+
+Generate `Month` and `Year` columns.
+
+```{r}
+crime$Month <- as.Date(crime$Date)
+crime$Year <- as.POSIXlt(crime$Date)$year + 1900
+```
+
+Exclude year 2014 for which we only have partial data.
+
+```{r}
+crime <- subset(crime, Year >= 2015)
+```
+
+Create data with proportion of men and women in total and stratified by police district.
+
+```{r}
+sexProp <- count(crime, SEX) %>%
+    mutate(prop = n/sum(n))
+sexProp
+
+sexRegionProps <- crime %>% 
+  group_by(Police.District, SEX) %>% 
+  summarise(n = n(), .groups = "drop_last") %>%
+  mutate(prop = n/sum(n), .keep = "unused") %>% 
+  ungroup()
+sexRegionProps$Police.District <- reorder(sexRegionProps$Police.District,
+                                          sexRegionProps$prop,
+                                          function(x) x[1])
+head(sexRegionProps)
+```
+
+Define colors
+
+```{r}
+cols <- c(female = "#E46C0A", male = "#0070C0")
+```
+
+## Questions of interest
+
+In this lab we are only looking at the proportion of male versus female offenders, either for all of New Zealand or broken into different Police Districts. The data covers offending from 2015 to 2022.
+
+# Data visualisations and questions
+
+## Question 1
+
+In the SVG code, we create 2 separate `<svg>` elements to write the text and draw the boxes. The reason for doing so, is to be able to use a `viewBox` with a specification of `0 0 100 100` and making sure to specify `preserveAspectRatio="none"`. In this way, we create a viewport such that we can specify `width` of rectangles inside the viewBox as the percentage of the total width of the image. For the text, we use `<tspan>` to color some words.
+
+### Adding hyperlinks
+
+We use the `href` attribute within an `<a>` element wrapped around the text to create a hyperlink.
+
+### Adding tooltips
+
+We add a tooltip by simply adding a `<title>` elements as a child to whatever element we want to add the tooltip to, as described in the [documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/title). In this case, we add it as a child to the `<rect>` elements.
+
+### Adding animation
+
+We can add animations by using the `<animate>` element. We do so by adding them inside the `<rect>` elements. For the left bar, we can simply animate "along" the width of the bar. Since rectangles are always left-aligned in SVG, for the right bar that needs to "grow" to the left, we add an animation both for the width and the x position.
+
+We use `fill="freeze"` to ensure the rectangles stay in their end position.
+
+```{r echo = FALSE}
+cat(readLines("q1_animation.svg"), sep="\n")
+```
+
+<div>
+```{r echo = FALSE, results="asis"}
+cat(readLines("q1_animation.svg"), sep="\n")
+```
+</div>
+
+### Creating a button to run the animation
+
+We add `id="q1"` to the `<div>` element wrapped around our SVG code and then include the following to produce a button:
+
+```{r, eval = FALSE}
+<script type="text/javascript">
+function runAnim() {
+    const div = document.getElementById("q1");
+    const anims = div.getElementsByTagName("animate");
+    for (const anim of anims) {
+        anim.beginElement();
+    }
+}
+</script>
+<button id="button" onclick="runAnim()">Play</button>
+```
+
+<div id="q1">
+```{r echo = FALSE, results="asis"}
+cat(readLines("q1_animation.svg"), sep="\n")
+```
+</div>
+
+<script type="text/javascript">
+function runAnim1() {
+    const div = document.getElementById("q1");
+    const anims = div.getElementsByTagName("animate");
+    for (const anim of anims) {
+        anim.beginElement();
+    }
+}
+</script>
+<button id="button" onclick="runAnim1()">Play animation</button>
+
+## Question 2
+
+We create helper functions
+
+- `add_text`: adds left-aligned text as a child with `font-family` "sans-serif".
+- `add_barRatioSVG`: Creates an `<svg>` object of specified size with a `viewBox` enabling us to plot the rate in data within the new native user coordinate system. It then summarises the rate of observations within groups of `colvar` and creates rectangles using those rates and specified colors.
+- `add_text_and_bar`: A function to combine `add_text` and `add_barRatioSVG`, allocating the top half to the text and the bottom half to the bar of ratios.
+- `add_to_facets`: A function that splits data by a `facetvar`, allocates space to the different facets accordingly and then creates an `<svg>` for each facet and uses a `facet_fun` inside each facet. As a default it uses `add_text_and_bar`.
+- `svg_facet`: A wrapper function that initialises an svg document by calling `xml_new_root`, and it then uses `add_to_facets` to create the visualisation.
+
+```{r}
+library(xml2)
+
+add_text <- function(.x, label = "Some label",
+                     x = "0", y = "45",
+                     text.size = "18") {
+  xml_add_child(.x, "text", label,
+                x=x, y=y,
+                "font-size"=text.size, "font-family"="sans-serif", "text-anchor"="start")
+  
+  return(invisible())
+}
+
+add_barRatioSVG <- function(
+    .x,
+    data = crime,
+    label = "Some label",
+    ratevar = "prop",
+    colvar = "SEX",
+    cols = c("#E46C0A", "#0070C0"),
+    x = "0",
+    y = "50",
+    width = "500",
+    height = "50",
+    animate = FALSE) {
+  # Create rectangle inside svg object with viewBox specification
+  svg_rect <- xml_add_child(
+    .x, "svg",
+    x = x, y=y, width=width, height = height, viewBox="0 0 1 1", preserveAspectRatio="none"
+  )
+  
+  # Find rates from data
+  # data_list <- data %>% 
+  #   group_split({{colvar}} := get(colvar))
+  # rates <- sapply(data_list, function(x) x[[ratevar]])
+  data_sum <- data %>% 
+    group_by(across(all_of(colvar))) %>% 
+    summarise(n = n(), .groups = "drop_last") %>%
+    mutate(prop = n/sum(n), .keep = "unused")
+  
+  # Use the rates to determine box length and position
+  rect1 <- xml_add_child(svg_rect, "rect",
+                width=as.character(data_sum$prop[1]),
+                height="1",
+                fill=cols[1])
+  rect2 <- xml_add_child(svg_rect, "rect",
+                x=as.character(data_sum$prop[1]),
+                width=as.character(data_sum$prop[2]),
+                height="1",
+                fill=cols[2])
+  
+  if (animate) {
+    xml_add_child(rect1, "animate",
+                  attributeName="width",
+        from="0",
+        to=as.character(data_sum$prop[1]),
+        dur="1s",
+        fill="freeze")
+    xml_add_child(rect2, "animate",
+                  attributeName="width",
+        from="0",
+        to=as.character(data_sum$prop[2]),
+        dur="1s",
+        fill="freeze")
+    xml_add_child(rect2, "animate",
+                  attributeName="x",
+        from="1",
+        to=as.character(data_sum$prop[1]),
+        dur="1s",
+        fill="freeze")
+  }
+  
+  # Add tooltips
+  if (TRUE) {
+    xml_add_child(
+    rect1, "title",
+    paste0(format(round(data_sum$prop[1]*100, 1), nsmall = 1),
+           "% of crimes were commited by ",
+           data_sum[[colvar]][1],
+           "s in ",
+           unique(data$Police.District))
+  )
+  xml_add_child(
+    rect2, "title",
+    paste0(format(round(data_sum$prop[2]*100, 1), nsmall = 1),
+           "% of crimes were commited by ",
+           data_sum[[colvar]][2],
+           "s in ",
+           unique(data$Police.District))
+  )
+  }
+  
+  return(invisible())
+}
+
+add_text_and_bar <- function(
+    .x,
+    data = crime,
+    label = "Some label",
+    ratevar = "prop",
+    colvar = "SEX",
+    cols = c("#E46C0A", "#0070C0"),
+    x = "0",
+    y = "0",
+    text.size = "18",
+    text.y.offset = "5",
+    width = "500",
+    height = "100",
+    animate = FALSE
+    ) {
+  args <- as.list(environment())
+  
+  y_mid <- as.character(as.numeric(y) + as.numeric(height) / 2)
+  y_text <- as.character(as.numeric(y_mid) - as.numeric(text.y.offset))
+  add_text(.x, label, x = x, y = y_text)
+  
+  args$.x <- .x
+  args$y <- y_mid
+  args$height <- as.character(as.numeric(args$height) / 2)
+  args_to_bar <- args[names(formals(add_barRatioSVG))]
+  do.call(add_barRatioSVG, args_to_bar)
+  
+  return(invisible())
+}
+
+facetlevels_by_ratevar <- function(
+    data = crime,
+    ratevar = "prop",
+    colvar = "SEX",
+    facetvar = "Police.District"
+) {
+  
+  data_sum <- data %>% 
+    group_by(across(all_of(c(facetvar, colvar)))) %>% 
+    summarise(n = n(), .groups = "drop_last") %>%
+    mutate(ratevar := n/sum(n), .keep = "unused") %>% 
+    ungroup()
+  
+  levels(reorder(data_sum[[facetvar]], data_sum$ratevar, function(x) x[1]))
+}
+
+add_to_facets <- function(
+    .x,
+    facet_fun = add_text_and_bar,
+    ...,
+    data = crime,
+    ratevar = "prop",
+    colvar = "SEX",
+    facetvar = "Police.District",
+    x = "0",
+    width = "500",
+    height = "600") {
+  
+  args <- c(as.list(environment()), list(...))
+  
+  data[[facetvar]] <- factor(
+    data[[facetvar]],
+    levels = facetlevels_by_ratevar(
+      data = data, ratevar = ratevar, colvar = colvar, facetvar = facetvar
+    )
+  )
+  facet_data <- data %>% 
+    group_split({{facetvar}} := get(facetvar))
+  n_facets <- length(facet_data)
+  height_facet <- as.character(as.numeric(height) / n_facets)
+  ys <- as.numeric(height_facet) * 0:(n_facets-1)
+  
+  args_to_facet <- args
+  args_to_facet$height <- height_facet
+  
+  map2(1:n_facets, ys, function(i, y) {
+    svg_facet <- xml_add_child(
+      .x, "svg",
+      x = x, y=y, width=width, height = height_facet
+    )
+    
+    args_to_facet$.x <- svg_facet
+    args_to_facet$data <- facet_data[[i]]
+    args_to_facet$label <- as.character(unique(args_to_facet$data[[facetvar]]))
+    args_to_facet$y <- 0
+    args_to_facet <- compact(args_to_facet[names(formals(facet_fun))])
+    do.call(facet_fun, args_to_facet)
+  })
+}
+
+svg_facet <- function(
+    facet_fun = add_text_and_bar,
+    ...,
+    data = crime,
+    ratevar = "prop",
+    colvar = "SEX",
+    facetvar = "Police.District",
+    x = "0",
+    width = "500",
+    height = "600") {
+  
+  args <- c(as.list(environment()), list(...))
+
+  svg <- xml_new_root("svg",
+                      version="1.1",
+                      width=width, height=height,
+                      xmlns="http://www.w3.org/2000/svg")
+  
+  do.call(add_to_facets, c(list(.x = svg), args))
+  
+  return(svg)
+}
+```
+
+Run the function to save an svg file.
+
+```{r}
+# svg <- svg_facet(facet_fun = add_barRatioSVG)
+# svg <- svg_facet(facet_fun = add_text)
+svg <- svg_facet(animate = TRUE)
+write_xml(svg, "q2_program.svg")
+```
+
+<div id="q2">
+```{r echo = FALSE, results="asis"}
+cat(paste(gsub("^\\s*", "", readLines("q2_program.svg")), collapse = ""))
+```
+</div>
+
+<script type="text/javascript">
+function runAnim2() {
+    const div = document.getElementById("q2");
+    const anims = div.getElementsByTagName("animate");
+    for (const anim of anims) {
+        anim.beginElement();
+    }
+}
+</script>
+<button id="button" onclick="runAnim2()">Play animation</button>
+
+## Challenge
+
+The svg file produces by the function above is pasted [at the end of the document](#r-svg-code). We use the following code to embed a selection menu, which determines which animation to run when the button is pressed:
+
+```{r eval = FALSE}
+<script type="text/javascript">
+function runAnimSelected() {
+    const div = document.getElementById("c");
+    const menu = document.getElementById("region");
+    const region = menu.selectedOptions[0].value;
+    const allRects = div.querySelectorAll("svg svg rect");
+    const rect1 = +region * 2 - 1
+    const rect2 = rect1 - 1;
+    const anim1 = allRects[rect1].querySelectorAll("animate");
+    for (const anim of anim1) {
+        anim.beginElement();
+    }
+    const anim2 = allRects[rect2].querySelectorAll("animate");
+    for (const anim of anim2) {
+        anim.beginElement();
+    }
+}
+</script>
+<select id="region">
+  <option value="1">Auckland City</option>
+  <option value="2">Tasman</option>
+  <option value="3">Waitemata</option>
+  <option value="4">Wellington</option>
+  <option value="5">Southern</option>
+  <option value="6">Bay Of Plenty</option>
+  <option value="7">Canterbury</option>
+  <option value="8">Northland</option>
+  <option value="9">Waikato</option>
+  <option value="10">Counties/Manukau</option>
+  <option value="11">Central</option>
+  <option value="12">Eastern</option>
+</select>
+<button id="button" onclick="runAnimSelected()">Play</button>
+```
+
+> Note that since we have nested `<svg>`s, we use the line `const allRects = div.querySelectorAll("svg svg rect");` to fetch all `<rect>` elements in the svg file.
+
+Afterwards we find the indices of the relevant `<rect>`s corresponding to the selection of region using `const rect1 = +region * 2 - 1; const rect2 = rect1 - 1;`. Then, we can fetch all the `<animation>` elements within a corresponding `<rect>` element with `allRects[rectXX].querySelectorAll("animate")` and then run the elements with the `beginElement` method.
+
+<div id="c">
+```{r echo = FALSE, results="asis"}
+cat(paste(gsub("^\\s*", "", readLines("q2_program.svg")), collapse = ""))
+```
+</div>
+
+<script type="text/javascript">
+function runAnimSelected() {
+    const div = document.getElementById("c");
+    const menu = document.getElementById("region");
+    const region = menu.selectedOptions[0].value;
+    const allRects = div.querySelectorAll("svg svg rect");
+    const rect1 = +region * 2 - 1
+    const rect2 = rect1 - 1;
+    const anim1 = allRects[rect1].querySelectorAll("animate");
+    for (const anim of anim1) {
+        anim.beginElement();
+    }
+    const anim2 = allRects[rect2].querySelectorAll("animate");
+    for (const anim of anim2) {
+        anim.beginElement();
+    }
+}
+</script>
+<select id="region">
+  <option value="1">Auckland City</option>
+  <option value="2">Tasman</option>
+  <option value="3">Waitemata</option>
+  <option value="4">Wellington</option>
+  <option value="5">Southern</option>
+  <option value="6">Bay Of Plenty</option>
+  <option value="7">Canterbury</option>
+  <option value="8">Northland</option>
+  <option value="9">Waikato</option>
+  <option value="10">Counties/Manukau</option>
+  <option value="11">Central</option>
+  <option value="12">Eastern</option>
+</select>
+<button id="button" onclick="runAnimSelected()">Play</button>
+
+# Overall summary
+
+To create a bar of ratios between men and women with a colored title, we write svg code using `<text>` and `<rect>` elements, making use of `<tspan>` to colors words in the title, and using `viewBox` and `preserveAspectRatio` attributes to easily use data values inside a coordinate system where we have specified a native scale.
+
+We add hyperlinks using the `href` attribute inside an `<a>` element as parent to the `<text>` element. We add tooltips using ... . Lastly, we add animation using an `<animation>` element as a child of the `<rect>` element we want to display as an animation. We can even embed a button using javascript that when pressed runs the animation.
+
+In question 2, we do the same again, but here we stratify our data by police district, find values programmatically and create bars with labels inside sub-`<svg>` elements.
+
+In question 3 we expand on the use of javascript by adding a selection menu of region to run the animation for.
+
+# svg file produced by R function {#r-svg-code}
+
+```{r echo = FALSE}
+cat(readLines("q2_program.svg"), sep="\n")
+```
