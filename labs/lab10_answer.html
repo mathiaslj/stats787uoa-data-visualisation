@@ -1,0 +1,1769 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.31">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Mathias L. Jeppesen">
+<meta name="dcterms.date" content="2025-06-15">
+
+<title>lab 10 - Highest Attained Education in Denmark – STATS 787: Data Visualisation lab assignments</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-9858b18c4973bd76a2cee652a7e89672.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<link href="../site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+<script src="../site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<script src="../site_libs/plotly-binding-4.10.4/plotly.js"></script>
+<script src="../site_libs/typedarray-0.1/typedarray.min.js"></script>
+<script src="../site_libs/jquery-3.5.1/jquery.min.js"></script>
+<link href="../site_libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet">
+<script src="../site_libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
+<link href="../site_libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet">
+<script src="../site_libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
+
+
+</head>
+
+<body class="nav-sidebar docked nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">STATS 787: Data Visualisation lab assignments</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-lab-assignments" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Lab assignments</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-lab-assignments">    
+        <li class="dropdown-header">Lab assignments</li>
+        <li>
+    <a class="dropdown-item" href="../labs/lab1_answer.html">
+ <span class="dropdown-text">Lab1 - Grammar of Graphics</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../labs/lab10_answer.html">
+ <span class="dropdown-text">lab 10 - Highest Attained Education in Denmark</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../labs/lab2_answer.html">
+ <span class="dropdown-text">Lab2 - The <code>grid</code> Graphics System</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../labs/lab3_answer.html">
+ <span class="dropdown-text">Lab3 - Effective Data Visualisations</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../labs/lab4_answer.html">
+ <span class="dropdown-text">Lab4 - Visual Perception</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../labs/lab5_answer.html">
+ <span class="dropdown-text">Lab5 - Graphic Design</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../labs/lab6_answer.html">
+ <span class="dropdown-text">Lab6 - Animation</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../labs/lab7_answer.html">
+ <span class="dropdown-text">Lab7 - Interactive Graphics</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../labs/lab8_answer.html">
+ <span class="dropdown-text">Lab8 - Maps</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../labs/lab9_answer.html">
+ <span class="dropdown-text">Lab 9 - SVG graphics</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/mathiaslj/stats787uoa-data-visualisation"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <a class="flex-grow-1 no-decor" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+          <h1 class="quarto-secondary-nav-title">lab 10 - Highest Attained Education in Denmark</h1>
+        </a>     
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Lab assignments</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../labs/lab1_answer.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Lab1 - Grammar of Graphics</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../labs/lab10_answer.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">lab 10 - Highest Attained Education in Denmark</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../labs/lab2_answer.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Lab2 - The <code>grid</code> Graphics System</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../labs/lab3_answer.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Lab3 - Effective Data Visualisations</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../labs/lab4_answer.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Lab4 - Visual Perception</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../labs/lab5_answer.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Lab5 - Graphic Design</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../labs/lab6_answer.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Lab6 - Animation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../labs/lab7_answer.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Lab7 - Interactive Graphics</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../labs/lab8_answer.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Lab8 - Maps</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../labs/lab9_answer.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Lab 9 - SVG graphics</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#the-data-set" id="toc-the-data-set" class="nav-link active" data-scroll-target="#the-data-set">The Data Set</a>
+  <ul class="collapse">
+  <li><a href="#data-in-long-format" id="toc-data-in-long-format" class="nav-link" data-scroll-target="#data-in-long-format">Data in long format</a></li>
+  </ul></li>
+  <li><a href="#questions-of-interest" id="toc-questions-of-interest" class="nav-link" data-scroll-target="#questions-of-interest">Questions of Interest</a></li>
+  <li><a href="#distribution-of-men-and-women-in-highest-attained-education" id="toc-distribution-of-men-and-women-in-highest-attained-education" class="nav-link" data-scroll-target="#distribution-of-men-and-women-in-highest-attained-education">Distribution of men and women in highest attained education</a>
+  <ul class="collapse">
+  <li><a href="#simple-bar-plot-of-gender-proportion" id="toc-simple-bar-plot-of-gender-proportion" class="nav-link" data-scroll-target="#simple-bar-plot-of-gender-proportion">Simple bar plot of gender proportion</a></li>
+  <li><a href="#bar-plot-with-annotated-labels" id="toc-bar-plot-with-annotated-labels" class="nav-link" data-scroll-target="#bar-plot-with-annotated-labels">Bar plot with annotated labels</a></li>
+  <li><a href="#small-multiples-line-plot-across-years" id="toc-small-multiples-line-plot-across-years" class="nav-link" data-scroll-target="#small-multiples-line-plot-across-years">Small multiples line plot across years</a></li>
+  </ul></li>
+  <li><a href="#distribution-of-socioeconomic-status-across-time" id="toc-distribution-of-socioeconomic-status-across-time" class="nav-link" data-scroll-target="#distribution-of-socioeconomic-status-across-time">Distribution of socioeconomic status across time</a>
+  <ul class="collapse">
+  <li><a href="#highlighting-unemployment" id="toc-highlighting-unemployment" class="nav-link" data-scroll-target="#highlighting-unemployment">Highlighting (un)employment</a></li>
+  <li><a href="#stratified-by-highest-education" id="toc-stratified-by-highest-education" class="nav-link" data-scroll-target="#stratified-by-highest-education">Stratified by highest education</a></li>
+  </ul></li>
+  <li><a href="#distribution-of-socioeconomic-status-across-age-groups" id="toc-distribution-of-socioeconomic-status-across-age-groups" class="nav-link" data-scroll-target="#distribution-of-socioeconomic-status-across-age-groups">Distribution of socioeconomic status across age groups</a></li>
+  <li><a href="#distribution-of-highest-attained-education-across-age-groups" id="toc-distribution-of-highest-attained-education-across-age-groups" class="nav-link" data-scroll-target="#distribution-of-highest-attained-education-across-age-groups">Distribution of highest attained education across age groups</a>
+  <ul class="collapse">
+  <li><a href="#using-an-ordering-of-colors." id="toc-using-an-ordering-of-colors." class="nav-link" data-scroll-target="#using-an-ordering-of-colors.">Using an “ordering” of colors.</a></li>
+  <li><a href="#using-interactivity" id="toc-using-interactivity" class="nav-link" data-scroll-target="#using-interactivity">Using interactivity</a></li>
+  <li><a href="#answering-questions-of-interest-1" id="toc-answering-questions-of-interest-1" class="nav-link" data-scroll-target="#answering-questions-of-interest-1">Answering questions of interest</a></li>
+  </ul></li>
+  <li><a href="#overall-summary" id="toc-overall-summary" class="nav-link" data-scroll-target="#overall-summary">Overall summary</a>
+  <ul class="collapse">
+  <li><a href="#distribution-of-men-and-women-across-highest-attained-education" id="toc-distribution-of-men-and-women-across-highest-attained-education" class="nav-link" data-scroll-target="#distribution-of-men-and-women-across-highest-attained-education">Distribution of men and women across highest attained education</a>
+  <ul class="collapse">
+  <li><a href="#across-time" id="toc-across-time" class="nav-link" data-scroll-target="#across-time">Across time</a></li>
+  </ul></li>
+  <li><a href="#distribution-of-socioeconomic-status" id="toc-distribution-of-socioeconomic-status" class="nav-link" data-scroll-target="#distribution-of-socioeconomic-status">Distribution of socioeconomic status</a>
+  <ul class="collapse">
+  <li><a href="#across-time-1" id="toc-across-time-1" class="nav-link" data-scroll-target="#across-time-1">Across time</a></li>
+  <li><a href="#across-age-groups" id="toc-across-age-groups" class="nav-link" data-scroll-target="#across-age-groups">Across age groups</a></li>
+  </ul></li>
+  <li><a href="#distribution-of-highest-attained-education-across-age-groups-1" id="toc-distribution-of-highest-attained-education-across-age-groups-1" class="nav-link" data-scroll-target="#distribution-of-highest-attained-education-across-age-groups-1">Distribution of highest attained education across age groups</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/mathiaslj/stats787uoa-data-visualisation/blob/main/labs/lab10_answer.Rmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block">lab 10 - Highest Attained Education in Denmark</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Mathias L. Jeppesen </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">June 15, 2025</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="the-data-set" class="level2">
+<h2 class="anchored" data-anchor-id="the-data-set">The Data Set</h2>
+<p>The data set is a csv file, <code>dk_highest_education.csv</code>, extracted from <a href="www.statistikbanken.dk/HFUDD16">table HFUDD16</a> (note that you can choose “English” in the upper right corner) as part of <a href="https://www.dst.dk/en/Statistik/dokumentation/documentationofstatistics/highest-education-attained">Highest Education Attained</a> on <a href="https://statistikbanken.dk/">statistikbanken</a>. This is a publicly available data base of data sets generated by <a href="http://www.dst.dk/">Danmarks Statistik</a>, which is the central authority of Danish statistics, who collects, processes and publishes statistics about the Danish society.</p>
+<p>The data has counts of the highest attained education of Danish residents based on a number of factors. We can read the csv into R and quickly give it some meaningful column names.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>highed <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"dk_highest_education.csv"</span>, <span class="at">header =</span> <span class="cn">FALSE</span>)[, <span class="sc">-</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)]</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(highed) <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"sex"</span>, <span class="st">"socioeconomic_status"</span>, <span class="st">"highest_education"</span>, <span class="st">"age"</span>, <span class="dv">2009</span><span class="sc">:</span><span class="dv">2022</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(highed)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  sex  socioeconomic_status     highest_education         age   2009   2010
+1 Men Enrolled in education H10 Primary education 15-19 years 140633 146660
+2 Men Enrolled in education H10 Primary education 20-24 years  21355  24397
+3 Men Enrolled in education H10 Primary education 25-29 years   4150   4708
+4 Men Enrolled in education H10 Primary education 30-34 years   1830   1853
+5 Men Enrolled in education H10 Primary education 35-39 years    976    957
+6 Men Enrolled in education H10 Primary education 40-44 years    650    620
+    2011   2012   2013   2014   2015   2016   2017   2018   2019   2020   2021
+1 149409 150766 149242 147672 145439 144336 144044 144411 142423 145685 145535
+2  25725  26379  26752  25828  24709  23457  22675  22082  21695  23137  22183
+3   5317   6010   6464   6992   6444   5930   5606   5606   5554   5633   5685
+4   1919   2072   2300   2380   2372   2372   2291   2181   2169   2133   2232
+5   1049   1099   1110   1075   1001   1063    995   1016   1030   1048   1078
+6    616    619    703    594    624    576    507    496    498    547    638
+    2022
+1 144946
+2  19279
+3   4931
+4   2126
+5   1050
+6    594</code></pre>
+</div>
+</div>
+<p>Each row contains a count of Danish residents in years 2009-2022 based on sex, socioeconomic status, highest attained education and age groups of 5 years from 15-19 to 65-69. We deselect the first 2 columns as they contain the same value for all observations.</p>
+<section id="data-in-long-format" class="level3">
+<h3 class="anchored" data-anchor-id="data-in-long-format">Data in long format</h3>
+<p>We create a long version of data, where years are in a single column and the counts are in another column.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>highed_long <span class="ot">&lt;-</span> highed <span class="sc">%&gt;%</span> </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="fu">as.character</span>(<span class="dv">2009</span><span class="sc">:</span><span class="dv">2022</span>),</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"year"</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"count"</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">as.numeric</span>(year))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="questions-of-interest" class="level2">
+<h2 class="anchored" data-anchor-id="questions-of-interest">Questions of Interest</h2>
+<p>We wish to investigate</p>
+<ul>
+<li>The proportion/distribution of men and women in different groups of highest attained education</li>
+<li>The distribution of highest attained education across age groups (mostly with focus on people from age 25 and up since 15-24 year olds are quite restricted in what they “have had time to achieve” in regards to education)</li>
+<li>The distribution of socioeconomic status
+<ul>
+<li>across time (stratified by highest attained education)</li>
+<li>across different age groups</li>
+</ul></li>
+</ul>
+</section>
+<section id="distribution-of-men-and-women-in-highest-attained-education" class="level2">
+<h2 class="anchored" data-anchor-id="distribution-of-men-and-women-in-highest-attained-education">Distribution of men and women in highest attained education</h2>
+<p>We start by making creating a summarised data set</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>sexHighedSum <span class="ot">&lt;-</span> highed_long <span class="sc">%&gt;%</span> </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">sum</span>(count), <span class="at">.by =</span> <span class="fu">c</span>(<span class="st">"sex"</span>, <span class="st">"highest_education"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="simple-bar-plot-of-gender-proportion" class="level3">
+<h3 class="anchored" data-anchor-id="simple-bar-plot-of-gender-proportion">Simple bar plot of gender proportion</h3>
+<p>To investigate the distribution of men and women for each group of highest attained education, we create a simple bar plot.</p>
+<p>We choose a bar plot because the use of position/length/area are effective <em>visual channels</em> according to Kieran Healy as mentioned in <a href="https://socviz.co/lookatdata.html#channels-for-representing-data">section 1.5</a> of <em>Data Visualization: A Practical Introduction</em>.</p>
+<p>According to Wilke in <a href="https://clauswilke.com/dataviz/redundant-coding.html#designing-figures-without-legends">section 20.2</a> of <em>Fundamentals of Data Visualization</em>, we should design figures without legends whenever possible, so we use the <code>ggtext</code> package to color our title with HTML. We first create some helper function to enable us to do so. Specifically, we create a function <code>get_default_colors</code> which will set a default color scheme if no colors are specified. We also create a function <code>color_html_label</code> to color a single word with HTML and a function <code>color_html_label_instring</code> to color and wrap and entire string with line breaks.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>get_default_colors <span class="ot">&lt;-</span> <span class="cf">function</span>(data, colvar, <span class="at">colors =</span> <span class="cn">NULL</span>) {</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  colvarVals <span class="ot">&lt;-</span> <span class="fu">unique</span>(data[[colvar]])</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">is.null</span>(colors)) {</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    colors <span class="ot">&lt;-</span> <span class="fu">setNames</span>(scales<span class="sc">::</span><span class="fu">pal_hue</span>()(<span class="fu">length</span>(colvarVals)), colvarVals)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (<span class="fu">is.null</span>(<span class="fu">names</span>(colors))) {</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    colors <span class="ot">&lt;-</span> <span class="fu">setNames</span>(colors, colvarVals)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(colors)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>color_html_label <span class="ot">&lt;-</span> <span class="cf">function</span>(color, label) {</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">paste0</span>(</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"&lt;span style = 'color:"</span>, color, <span class="st">";'&gt;"</span>, label, <span class="st">"&lt;/span&gt;"</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>escape_parentheses <span class="ot">&lt;-</span> <span class="cf">function</span>(string) {</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gsub</span>(</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>      <span class="st">"</span><span class="sc">\\</span><span class="st">("</span>, <span class="st">"</span><span class="sc">\\\\</span><span class="st">("</span>,</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>      <span class="fu">gsub</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">)"</span>, <span class="st">"</span><span class="sc">\\\\</span><span class="st">)"</span>, string)</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>color_html_label_instring <span class="ot">&lt;-</span> <span class="cf">function</span>(</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    string,</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    colors,</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">width =</span> <span class="dv">50</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>) {</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>  string_wrap <span class="ot">&lt;-</span> stringr<span class="sc">::</span><span class="fu">str_wrap</span>(</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>    string,</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">width =</span> width</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>    stringr<span class="sc">::</span><span class="fu">str_replace_all</span>(</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>      <span class="at">pattern =</span> <span class="st">"</span><span class="sc">\\</span><span class="st">n"</span>,</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>      <span class="at">replacement =</span> <span class="st">"&lt;br&gt;"</span></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>  color_catch <span class="ot">&lt;-</span> <span class="fu">gsub</span>(</span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>    <span class="st">" "</span>, <span class="st">"( |&lt;br&gt;)"</span>,</span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">escape_parentheses</span>(<span class="fu">names</span>(colors)),</span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">fixed =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>  color_names_wrapped <span class="ot">&lt;-</span> <span class="fu">escape_parentheses</span>(</span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>    stringr<span class="sc">::</span><span class="fu">str_match</span>(string_wrap, color_catch)[, <span class="dv">1</span>]</span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">names</span>(colors) <span class="ot">&lt;-</span> color_names_wrapped</span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>  colors_html <span class="ot">&lt;-</span> <span class="fu">setNames</span>(<span class="fu">color_html_label</span>(colors, <span class="fu">names</span>(colors)),</span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>             <span class="fu">names</span>(colors))</span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>  string_wrap_color <span class="ot">&lt;-</span> stringr<span class="sc">::</span><span class="fu">str_replace_all</span>(</span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>    string_wrap,</span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>    colors_html</span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(string_wrap_color)</span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We then create the bar plot on our summarised data using <code>geom_col</code>, using <code>position = "fill"</code> as we are interested in the proportion of men and women and not the absolute counts. We use <code>coord_flip()</code> to flip the axes, so we can read the labels more easily. We also use <code>scale_y_continuous(expand = expansion(mult = c(0, .05)))</code> to remove some space from the bars to the axis labels. Using the description in the title, we can also remove the axis titles. Finally, we superimpose a line at 50% to make it easier to see whether there is an overrepresentation of men or women.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>sexBar <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">data =</span> sexHighedSum, <span class="at">colors =</span> <span class="cn">NULL</span>) {</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  colors <span class="ot">&lt;-</span> <span class="fu">get_default_colors</span>(<span class="at">data =</span> data, <span class="at">colvar =</span> <span class="st">"sex"</span>, <span class="at">colors =</span> colors)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  title <span class="ot">&lt;-</span> <span class="st">"Proportion of Men and Women with Highest Attained Education"</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  colored_title <span class="ot">&lt;-</span> <span class="fu">color_html_label_instring</span>(</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    title,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    colors,</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">width =</span> <span class="dv">35</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> highest_education, <span class="at">y =</span> n, <span class="at">fill =</span> sex)) <span class="sc">+</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_col</span>(<span class="at">position =</span> <span class="st">"fill"</span>) <span class="sc">+</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fl">0.5</span>, <span class="at">color =</span> <span class="st">"grey20"</span>) <span class="sc">+</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(<span class="at">expand =</span> <span class="fu">expansion</span>(<span class="at">mult =</span> <span class="fu">c</span>(<span class="dv">0</span>, .<span class="dv">01</span>))) <span class="sc">+</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> colors) <span class="sc">+</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> colored_title) <span class="sc">+</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>      <span class="at">plot.title =</span> ggtext<span class="sc">::</span><span class="fu">element_markdown</span>(</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">size =</span> <span class="dv">20</span>,</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>      <span class="at">plot.background=</span><span class="fu">element_rect</span>(<span class="at">colour=</span><span class="cn">NA</span>, <span class="at">fill=</span><span class="st">"white"</span>),</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.background=</span><span class="fu">element_rect</span>(<span class="at">colour=</span><span class="cn">NA</span>,</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">fill=</span><span class="st">"white"</span>),</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>      <span class="at">axis.title =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>      <span class="at">axis.ticks.y =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>      <span class="at">legend.position =</span> <span class="st">"none"</span></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a><span class="fu">sexBar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab10_answer_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="answering-questions-of-interest" class="level4">
+<h4 class="anchored" data-anchor-id="answering-questions-of-interest">Answering questions of interest</h4>
+<p>The plot clearly shows for which groups there are more men and for which there are more women.</p>
+<p>It is however a bit hard to see by how much the proportions differ from 50%.</p>
+</section>
+</section>
+<section id="bar-plot-with-annotated-labels" class="level3">
+<h3 class="anchored" data-anchor-id="bar-plot-with-annotated-labels">Bar plot with annotated labels</h3>
+<p>To create a plot with annotated labels, we use a low-level solution of creating the plot exactly how we want it with <code>grid</code>. We also use <code>gridtext</code> to ensure that if a user includes values in the title that is a value in data for the colored variable, the word is colored accordingly in the title.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(grid)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gridtext)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We create a function that creates a grob with a bar and label.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>barRatioGrob <span class="ot">&lt;-</span> <span class="cf">function</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    data,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">colvar =</span> <span class="st">"sex"</span>,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">colors =</span> <span class="cn">NULL</span>,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">label.digits =</span> <span class="dv">1</span>,</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">bar.height =</span> <span class="fu">unit</span>(<span class="dv">1</span>, <span class="st">"cm"</span>),</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">include_colvar_label =</span> <span class="cn">TRUE</span>) {</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  colors <span class="ot">&lt;-</span> <span class="fu">get_default_colors</span>(<span class="at">data =</span> data, <span class="at">colvar =</span> colvar, <span class="at">colors =</span> colors)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  data <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> </span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">mutate</span>(</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">label =</span> <span class="fu">paste0</span>(</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>        <span class="fu">case_when</span>(</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>          include_colvar_label <span class="sc">~</span> <span class="fu">paste0</span>(<span class="fu">get</span>(colvar), <span class="st">" "</span>),</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>          <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">""</span>),</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>        <span class="fu">format</span>(</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>          <span class="fu">round</span>(rate <span class="sc">*</span> <span class="dv">100</span>, <span class="at">digits =</span> label.digits),</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>          <span class="at">nsmall =</span> label.digits</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>          ),</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>        <span class="st">"%"</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>        ),</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>      <span class="at">sumrate =</span> <span class="fu">cumsum</span>(rate),</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>      <span class="at">label_pos =</span> sumrate <span class="sc">-</span> rate</span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>  colVals <span class="ot">&lt;-</span> <span class="fu">unique</span>(data[[colvar]])</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>  barText <span class="ot">&lt;-</span> <span class="cf">function</span>(i) {</span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>    colData <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> </span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">filter</span>(<span class="fu">get</span>(colvar) <span class="sc">==</span> colVals[i])</span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>    bar <span class="ot">&lt;-</span> <span class="fu">rectGrob</span>(<span class="at">x =</span> <span class="fu">unit</span>(colData<span class="sc">$</span>label_pos, <span class="st">"npc"</span>),</span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>                   <span class="at">hjust =</span> <span class="dv">0</span>,</span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>                   <span class="at">width =</span> <span class="fu">unit</span>(colData<span class="sc">$</span>rate, <span class="st">"npc"</span>),</span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>                   <span class="at">height =</span> bar.height,</span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>                   <span class="at">gp =</span> <span class="fu">gpar</span>(<span class="at">col =</span> colors[colVals[i]], <span class="at">fill =</span> colors[colVals[i]]))</span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>    text <span class="ot">&lt;-</span> <span class="fu">textGrob</span>(<span class="at">x =</span> <span class="fu">unit</span>(colData<span class="sc">$</span>label_pos, <span class="st">"npc"</span>) <span class="sc">+</span> <span class="fu">unit</span>(<span class="dv">1</span>, <span class="st">"mm"</span>),</span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>                    <span class="at">label =</span> colData<span class="sc">$</span>label,</span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a>                    <span class="at">hjust =</span> <span class="dv">0</span>,</span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a>                    <span class="at">gp =</span> <span class="fu">gpar</span>(<span class="at">fontface =</span> <span class="st">"bold"</span>))</span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a>    <span class="fu">grobTree</span>(bar, text)</span>
+<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a>  barsTexts <span class="ot">&lt;-</span> <span class="fu">do.call</span>(grobTree, <span class="fu">lapply</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(colVals), barText))</span>
+<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(barsTexts)</span>
+<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Using this function, we then create a function that creates bars and labels within each group defined by <code>facetvar</code>. We use <code>grid.layout</code> to create a layout with the number of rows equal to the number of unique values in <code>facetvar</code>. We then create a grob for each group and draw it in the correct position. We also add the facet labels and a title.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>bar_ratios <span class="ot">&lt;-</span> <span class="cf">function</span>(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> highed_long,</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">colvar =</span> <span class="st">"sex"</span>,</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">facetvar =</span> <span class="st">"highest_education"</span>,</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">countvar =</span> <span class="st">"count"</span>,</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">colors =</span> <span class="cn">NULL</span>,</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Proportion of Men and Women with Highest Attained Education"</span>,</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">title.size =</span> <span class="dv">20</span>,</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">title.width =</span> <span class="dv">45</span>,</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">title.space =</span> <span class="fu">unit</span>(<span class="fl">0.14</span>, <span class="st">"npc"</span>),</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">facetlabel.size =</span> <span class="dv">11</span>,</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">ratelabel.digits =</span> <span class="dv">2</span>,</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">bar.height.ratio =</span> <span class="fl">0.8</span>,</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.margin =</span> <span class="fu">unit</span>(<span class="dv">1</span>, <span class="st">"cm"</span>),</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">include_colvar_label =</span> <span class="cn">TRUE</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>) {</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>  data <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> </span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">sum</span>(<span class="fu">get</span>(countvar)), <span class="at">.by =</span> <span class="fu">all_of</span>(<span class="fu">c</span>(colvar, facetvar))) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">tot =</span> <span class="fu">sum</span>(n), <span class="at">rate =</span> n <span class="sc">/</span> tot, <span class="at">.by =</span> <span class="fu">all_of</span>(facetvar))</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>  uniq <span class="ot">&lt;-</span> <span class="fu">unique</span>(data[[facetvar]])</span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>  n_facets <span class="ot">&lt;-</span> <span class="fu">length</span>(uniq)</span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>  longest_char <span class="ot">&lt;-</span> uniq[<span class="fu">which.max</span>(stringr<span class="sc">::</span><span class="fu">str_length</span>(uniq))]</span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>  text.space <span class="ot">&lt;-</span> <span class="fu">grobWidth</span>(<span class="fu">textGrob</span>(longest_char))</span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">grid.newpage</span>()</span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pushViewport</span>(</span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">viewport</span>(</span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>      <span class="at">layout =</span> <span class="fu">grid.layout</span>(<span class="at">nrow =</span> n_facets),</span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>      <span class="at">width =</span> <span class="fu">unit</span>(<span class="dv">1</span>, <span class="st">"npc"</span>) <span class="sc">-</span> text.space <span class="sc">-</span> <span class="dv">2</span> <span class="sc">*</span> plot.margin,</span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> text.space <span class="sc">+</span> plot.margin,</span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>      <span class="at">height =</span> <span class="fu">unit</span>(<span class="dv">1</span>, <span class="st">"npc"</span>) <span class="sc">-</span> title.space <span class="sc">-</span> <span class="dv">2</span> <span class="sc">*</span> plot.margin,</span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> plot.margin,</span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a>      <span class="at">just =</span> <span class="fu">c</span>(<span class="st">"left"</span>, <span class="st">"bottom"</span>)</span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a>  <span class="co"># bars</span></span>
+<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_facets) {</span>
+<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a>    data_group_i <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
+<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">filter</span>(<span class="fu">get</span>(facetvar) <span class="sc">==</span> uniq[i])</span>
+<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a>    bar_height_npc <span class="ot">&lt;-</span> bar.height.ratio <span class="sc">*</span> <span class="dv">1</span><span class="sc">/</span>n_facets</span>
+<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a>    bar <span class="ot">&lt;-</span> <span class="fu">barRatioGrob</span>(</span>
+<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a>      <span class="at">data =</span> data_group_i,</span>
+<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a>      <span class="at">bar.height =</span> <span class="fu">convertHeight</span>(<span class="fu">unit</span>(bar_height_npc, <span class="st">"npc"</span>), <span class="st">"inches"</span>),</span>
+<span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a>      <span class="at">colvar =</span> colvar,</span>
+<span id="cb9-49"><a href="#cb9-49" aria-hidden="true" tabindex="-1"></a>      <span class="at">colors =</span> colors,</span>
+<span id="cb9-50"><a href="#cb9-50" aria-hidden="true" tabindex="-1"></a>      <span class="at">include_colvar_label =</span> include_colvar_label,</span>
+<span id="cb9-51"><a href="#cb9-51" aria-hidden="true" tabindex="-1"></a>      <span class="at">label.digits =</span> ratelabel.digits</span>
+<span id="cb9-52"><a href="#cb9-52" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb9-53"><a href="#cb9-53" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pushViewport</span>(</span>
+<span id="cb9-54"><a href="#cb9-54" aria-hidden="true" tabindex="-1"></a>      <span class="fu">viewport</span>(</span>
+<span id="cb9-55"><a href="#cb9-55" aria-hidden="true" tabindex="-1"></a>        <span class="at">layout.pos.col=</span><span class="dv">1</span>, <span class="at">layout.pos.row=</span>i</span>
+<span id="cb9-56"><a href="#cb9-56" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb9-57"><a href="#cb9-57" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb9-58"><a href="#cb9-58" aria-hidden="true" tabindex="-1"></a>    <span class="fu">grid.draw</span>(bar)</span>
+<span id="cb9-59"><a href="#cb9-59" aria-hidden="true" tabindex="-1"></a>    <span class="fu">upViewport</span>()</span>
+<span id="cb9-60"><a href="#cb9-60" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb9-61"><a href="#cb9-61" aria-hidden="true" tabindex="-1"></a>  <span class="fu">popViewport</span>(<span class="dv">0</span>)</span>
+<span id="cb9-62"><a href="#cb9-62" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb9-63"><a href="#cb9-63" aria-hidden="true" tabindex="-1"></a>  <span class="co"># text labels</span></span>
+<span id="cb9-64"><a href="#cb9-64" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pushViewport</span>(</span>
+<span id="cb9-65"><a href="#cb9-65" aria-hidden="true" tabindex="-1"></a>    <span class="fu">viewport</span>(</span>
+<span id="cb9-66"><a href="#cb9-66" aria-hidden="true" tabindex="-1"></a>      <span class="at">layout =</span> <span class="fu">grid.layout</span>(<span class="at">nrow =</span> n_facets),</span>
+<span id="cb9-67"><a href="#cb9-67" aria-hidden="true" tabindex="-1"></a>      <span class="at">width =</span> text.space,</span>
+<span id="cb9-68"><a href="#cb9-68" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> text.space <span class="sc">+</span> plot.margin <span class="sc">-</span> <span class="fu">unit</span>(<span class="dv">1</span>, <span class="st">"mm"</span>),</span>
+<span id="cb9-69"><a href="#cb9-69" aria-hidden="true" tabindex="-1"></a>      <span class="at">height =</span> <span class="fu">unit</span>(<span class="dv">1</span>, <span class="st">"npc"</span>) <span class="sc">-</span> title.space <span class="sc">-</span> <span class="dv">2</span> <span class="sc">*</span> plot.margin,</span>
+<span id="cb9-70"><a href="#cb9-70" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> plot.margin,</span>
+<span id="cb9-71"><a href="#cb9-71" aria-hidden="true" tabindex="-1"></a>      <span class="at">just =</span> <span class="fu">c</span>(<span class="st">"right"</span>, <span class="st">"bottom"</span>)</span>
+<span id="cb9-72"><a href="#cb9-72" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb9-73"><a href="#cb9-73" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb9-74"><a href="#cb9-74" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_facets) {</span>
+<span id="cb9-75"><a href="#cb9-75" aria-hidden="true" tabindex="-1"></a>    label <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
+<span id="cb9-76"><a href="#cb9-76" aria-hidden="true" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">filter</span>(<span class="fu">get</span>(facetvar) <span class="sc">==</span> uniq[i]) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-77"><a href="#cb9-77" aria-hidden="true" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">pull</span>(facetvar) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-78"><a href="#cb9-78" aria-hidden="true" tabindex="-1"></a>      <span class="fu">unique</span>()</span>
+<span id="cb9-79"><a href="#cb9-79" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pushViewport</span>(<span class="fu">viewport</span>(<span class="at">layout.pos.col=</span><span class="dv">1</span>, <span class="at">layout.pos.row=</span>i))</span>
+<span id="cb9-80"><a href="#cb9-80" aria-hidden="true" tabindex="-1"></a>    <span class="fu">grid.text</span>(label, <span class="at">x =</span> <span class="dv">1</span>, <span class="at">hjust =</span> <span class="dv">1</span>,</span>
+<span id="cb9-81"><a href="#cb9-81" aria-hidden="true" tabindex="-1"></a>              <span class="at">gp =</span> <span class="fu">gpar</span>(<span class="at">fontsize =</span> facetlabel.size))</span>
+<span id="cb9-82"><a href="#cb9-82" aria-hidden="true" tabindex="-1"></a>    <span class="fu">upViewport</span>()</span>
+<span id="cb9-83"><a href="#cb9-83" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb9-84"><a href="#cb9-84" aria-hidden="true" tabindex="-1"></a>  <span class="fu">popViewport</span>(<span class="dv">0</span>)</span>
+<span id="cb9-85"><a href="#cb9-85" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb9-86"><a href="#cb9-86" aria-hidden="true" tabindex="-1"></a>  <span class="co"># white box to avoid text continuing across page</span></span>
+<span id="cb9-87"><a href="#cb9-87" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pushViewport</span>(</span>
+<span id="cb9-88"><a href="#cb9-88" aria-hidden="true" tabindex="-1"></a>    <span class="fu">viewport</span>(</span>
+<span id="cb9-89"><a href="#cb9-89" aria-hidden="true" tabindex="-1"></a>      <span class="at">width =</span> plot.margin,</span>
+<span id="cb9-90"><a href="#cb9-90" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> <span class="fu">unit</span>(<span class="dv">1</span>, <span class="st">"npc"</span>),</span>
+<span id="cb9-91"><a href="#cb9-91" aria-hidden="true" tabindex="-1"></a>      <span class="at">just =</span> <span class="fu">c</span>(<span class="st">"right"</span>)</span>
+<span id="cb9-92"><a href="#cb9-92" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb9-93"><a href="#cb9-93" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb9-94"><a href="#cb9-94" aria-hidden="true" tabindex="-1"></a>  <span class="fu">grid.rect</span>(<span class="at">gp =</span> <span class="fu">gpar</span>(<span class="at">fill =</span> <span class="st">"white"</span>, <span class="at">col =</span> <span class="cn">NA</span>))</span>
+<span id="cb9-95"><a href="#cb9-95" aria-hidden="true" tabindex="-1"></a>  <span class="fu">popViewport</span>(<span class="dv">0</span>)</span>
+<span id="cb9-96"><a href="#cb9-96" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb9-97"><a href="#cb9-97" aria-hidden="true" tabindex="-1"></a>  <span class="co"># title</span></span>
+<span id="cb9-98"><a href="#cb9-98" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pushViewport</span>(</span>
+<span id="cb9-99"><a href="#cb9-99" aria-hidden="true" tabindex="-1"></a>    <span class="fu">viewport</span>(</span>
+<span id="cb9-100"><a href="#cb9-100" aria-hidden="true" tabindex="-1"></a>      <span class="at">width =</span> <span class="fu">unit</span>(<span class="dv">1</span>, <span class="st">"npc"</span>) <span class="sc">-</span> text.space <span class="sc">-</span> <span class="dv">2</span> <span class="sc">*</span> plot.margin,</span>
+<span id="cb9-101"><a href="#cb9-101" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> text.space <span class="sc">+</span> plot.margin,</span>
+<span id="cb9-102"><a href="#cb9-102" aria-hidden="true" tabindex="-1"></a>      <span class="at">height =</span> title.space <span class="sc">-</span> plot.margin,</span>
+<span id="cb9-103"><a href="#cb9-103" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> <span class="fu">unit</span>(<span class="dv">1</span>, <span class="st">"npc"</span>) <span class="sc">-</span> plot.margin,</span>
+<span id="cb9-104"><a href="#cb9-104" aria-hidden="true" tabindex="-1"></a>      <span class="at">just =</span> <span class="fu">c</span>(<span class="st">"left"</span>, <span class="st">"top"</span>)</span>
+<span id="cb9-105"><a href="#cb9-105" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb9-106"><a href="#cb9-106" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb9-107"><a href="#cb9-107" aria-hidden="true" tabindex="-1"></a>  colors <span class="ot">&lt;-</span> <span class="fu">get_default_colors</span>(<span class="at">data =</span> data, <span class="at">colvar =</span> colvar, <span class="at">colors =</span> colors)</span>
+<span id="cb9-108"><a href="#cb9-108" aria-hidden="true" tabindex="-1"></a>  colored_title <span class="ot">&lt;-</span> <span class="fu">color_html_label_instring</span>(</span>
+<span id="cb9-109"><a href="#cb9-109" aria-hidden="true" tabindex="-1"></a>    <span class="at">string =</span> title,</span>
+<span id="cb9-110"><a href="#cb9-110" aria-hidden="true" tabindex="-1"></a>    <span class="at">colors =</span> colors,</span>
+<span id="cb9-111"><a href="#cb9-111" aria-hidden="true" tabindex="-1"></a>    <span class="at">width =</span> title.width</span>
+<span id="cb9-112"><a href="#cb9-112" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-113"><a href="#cb9-113" aria-hidden="true" tabindex="-1"></a>  <span class="fu">grid.draw</span>(</span>
+<span id="cb9-114"><a href="#cb9-114" aria-hidden="true" tabindex="-1"></a>    gridtext<span class="sc">::</span><span class="fu">richtext_grob</span>(colored_title, <span class="at">x =</span> <span class="dv">0</span>, <span class="at">hjust =</span> <span class="dv">0</span>,</span>
+<span id="cb9-115"><a href="#cb9-115" aria-hidden="true" tabindex="-1"></a>                            <span class="at">gp =</span> <span class="fu">gpar</span>(<span class="at">fontsize =</span> title.size))</span>
+<span id="cb9-116"><a href="#cb9-116" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb9-117"><a href="#cb9-117" aria-hidden="true" tabindex="-1"></a>  <span class="fu">popViewport</span>(<span class="dv">0</span>)</span>
+<span id="cb9-118"><a href="#cb9-118" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bar_ratios</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab10_answer_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="small-multiples-line-plot-across-years" class="level3">
+<h3 class="anchored" data-anchor-id="small-multiples-line-plot-across-years">Small multiples line plot across years</h3>
+<p>To investigate the distribution of men and women within different groups of highest attrained education across years, we create a small multiples line plot. Small multiples as described by <a href="https://clauswilke.com/dataviz/multi-panel-figures.html#small-multiples">Wilke</a> is a good way to use the strong visual channel of position to show subsets of data.</p>
+<p>We continue to color the title according to the guidance by <a href="https://clauswilke.com/dataviz/redundant-coding.html#designing-figures-without-legends">Wilke</a> to avoid legends when possible.</p>
+<p>We create <code>class_to_scalefun</code>, which is used to scale the x-axis no matter the class of it. We scale the x-axis to ensure we have no expansion on the left-hand side to ensure closer proximity between the axis text and the data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>class_to_scalefun <span class="ot">&lt;-</span> <span class="cf">function</span>(class) {</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">switch</span>(class,</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">numeric =</span> scale_x_continuous,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">integer =</span> scale_x_continuous,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">character =</span> scale_x_discrete,</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">factor =</span> scale_x_discrete,</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">Date =</span> scale_x_date,</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">POSIXct =</span> scale_x_datetime)</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>summarise_yvar <span class="ot">&lt;-</span> <span class="cf">function</span>(</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> highed_long,</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">yvar =</span> <span class="st">"count"</span>,</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">xvar =</span> <span class="st">"year"</span>,</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">groupvars =</span> <span class="fu">c</span>(<span class="st">"sex"</span>, <span class="st">"highest_education"</span>)) {</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">grepl</span>(<span class="st">"^diff_"</span>, yvar)) {</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>    yvar <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">"^diff_"</span>, <span class="st">""</span>, yvar)</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>    yvar_diff <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>    yvar_diff <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>  out <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> </span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>({{yvar}} <span class="sc">:</span><span class="er">=</span> <span class="fu">sum</span>(<span class="fu">get</span>(yvar)), <span class="at">.by =</span> <span class="fu">all_of</span>(<span class="fu">c</span>(xvar, groupvars)))</span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (yvar_diff) {</span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>    out <span class="ot">&lt;-</span> out <span class="sc">%&gt;%</span></span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mutate</span>({{yvar}} <span class="sc">:</span><span class="er">=</span> <span class="fu">get</span>(yvar) <span class="sc">-</span> <span class="fu">get</span>(yvar)[<span class="dv">1</span>], <span class="at">.by =</span> <span class="fu">all_of</span>(groupvars))</span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(out)</span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a>facet_line <span class="ot">&lt;-</span> <span class="cf">function</span>(</span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">xvar =</span> <span class="st">"year"</span>,</span>
+<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">yvar =</span> <span class="st">"count"</span>,</span>
+<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">colvar =</span> <span class="st">"sex"</span>,</span>
+<span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">facetvar =</span> <span class="st">"highest_education"</span>,</span>
+<span id="cb11-37"><a href="#cb11-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> highed_long,</span>
+<span id="cb11-38"><a href="#cb11-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">colors =</span> <span class="cn">NULL</span>,</span>
+<span id="cb11-39"><a href="#cb11-39" aria-hidden="true" tabindex="-1"></a>    <span class="at">fontfamily =</span> <span class="cn">NULL</span>,</span>
+<span id="cb11-40"><a href="#cb11-40" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="fl">1.1</span>,</span>
+<span id="cb11-41"><a href="#cb11-41" aria-hidden="true" tabindex="-1"></a>    <span class="at">title.size =</span> <span class="dv">24</span>,</span>
+<span id="cb11-42"><a href="#cb11-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">title.width =</span> <span class="dv">40</span>,</span>
+<span id="cb11-43"><a href="#cb11-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"By highest attained education and year"</span>,</span>
+<span id="cb11-44"><a href="#cb11-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle.size =</span> <span class="dv">18</span>,</span>
+<span id="cb11-45"><a href="#cb11-45" aria-hidden="true" tabindex="-1"></a>    ...) {</span>
+<span id="cb11-46"><a href="#cb11-46" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb11-47"><a href="#cb11-47" aria-hidden="true" tabindex="-1"></a>  data <span class="ot">&lt;-</span> <span class="fu">summarise_yvar</span>(</span>
+<span id="cb11-48"><a href="#cb11-48" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> data,</span>
+<span id="cb11-49"><a href="#cb11-49" aria-hidden="true" tabindex="-1"></a>    <span class="at">yvar =</span> yvar,</span>
+<span id="cb11-50"><a href="#cb11-50" aria-hidden="true" tabindex="-1"></a>    <span class="at">xvar =</span> xvar,</span>
+<span id="cb11-51"><a href="#cb11-51" aria-hidden="true" tabindex="-1"></a>    <span class="at">groupvars =</span> <span class="fu">c</span>(colvar, facetvar))</span>
+<span id="cb11-52"><a href="#cb11-52" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb11-53"><a href="#cb11-53" aria-hidden="true" tabindex="-1"></a>  colors <span class="ot">&lt;-</span> <span class="fu">get_default_colors</span>(<span class="at">data =</span> data, <span class="at">colvar =</span> colvar, <span class="at">colors =</span> colors)</span>
+<span id="cb11-54"><a href="#cb11-54" aria-hidden="true" tabindex="-1"></a>  ncol <span class="ot">&lt;-</span> <span class="fu">length</span>(colors)</span>
+<span id="cb11-55"><a href="#cb11-55" aria-hidden="true" tabindex="-1"></a>  title <span class="ot">&lt;-</span> <span class="fu">paste0</span>(</span>
+<span id="cb11-56"><a href="#cb11-56" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ifelse</span>(<span class="fu">grepl</span>(<span class="st">"^diff_"</span>, yvar),</span>
+<span id="cb11-57"><a href="#cb11-57" aria-hidden="true" tabindex="-1"></a>             <span class="st">"Difference in number of "</span>,</span>
+<span id="cb11-58"><a href="#cb11-58" aria-hidden="true" tabindex="-1"></a>             <span class="st">"Number of "</span></span>
+<span id="cb11-59"><a href="#cb11-59" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb11-60"><a href="#cb11-60" aria-hidden="true" tabindex="-1"></a>      <span class="fu">paste</span>(<span class="fu">names</span>(colors)[<span class="dv">1</span><span class="sc">:</span>(ncol<span class="dv">-1</span>)], <span class="at">collapse =</span> <span class="st">", "</span>),</span>
+<span id="cb11-61"><a href="#cb11-61" aria-hidden="true" tabindex="-1"></a>      <span class="st">" and "</span>,</span>
+<span id="cb11-62"><a href="#cb11-62" aria-hidden="true" tabindex="-1"></a>      <span class="fu">names</span>(colors)[ncol]</span>
+<span id="cb11-63"><a href="#cb11-63" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb11-64"><a href="#cb11-64" aria-hidden="true" tabindex="-1"></a>  colored_title <span class="ot">&lt;-</span> <span class="fu">color_html_label_instring</span>(</span>
+<span id="cb11-65"><a href="#cb11-65" aria-hidden="true" tabindex="-1"></a>    title,</span>
+<span id="cb11-66"><a href="#cb11-66" aria-hidden="true" tabindex="-1"></a>    colors,</span>
+<span id="cb11-67"><a href="#cb11-67" aria-hidden="true" tabindex="-1"></a>    <span class="at">width =</span> title.width</span>
+<span id="cb11-68"><a href="#cb11-68" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb11-69"><a href="#cb11-69" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb11-70"><a href="#cb11-70" aria-hidden="true" tabindex="-1"></a>  scalefun <span class="ot">&lt;-</span> <span class="fu">class_to_scalefun</span>(<span class="fu">class</span>(data[[xvar]]))</span>
+<span id="cb11-71"><a href="#cb11-71" aria-hidden="true" tabindex="-1"></a>  yvar <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">"^diff_"</span>, <span class="st">""</span>, yvar)</span>
+<span id="cb11-72"><a href="#cb11-72" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb11-73"><a href="#cb11-73" aria-hidden="true" tabindex="-1"></a>  p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
+<span id="cb11-74"><a href="#cb11-74" aria-hidden="true" tabindex="-1"></a>    data,</span>
+<span id="cb11-75"><a href="#cb11-75" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> .data[[xvar]],</span>
+<span id="cb11-76"><a href="#cb11-76" aria-hidden="true" tabindex="-1"></a>        <span class="at">y =</span> .data[[yvar]],</span>
+<span id="cb11-77"><a href="#cb11-77" aria-hidden="true" tabindex="-1"></a>        <span class="at">colour =</span> .data[[colvar]],</span>
+<span id="cb11-78"><a href="#cb11-78" aria-hidden="true" tabindex="-1"></a>        <span class="at">fill =</span> .data[[colvar]],</span>
+<span id="cb11-79"><a href="#cb11-79" aria-hidden="true" tabindex="-1"></a>        <span class="at">group =</span> .data[[colvar]])) <span class="sc">+</span> </span>
+<span id="cb11-80"><a href="#cb11-80" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">linewidth =</span> linewidth) <span class="sc">+</span> </span>
+<span id="cb11-81"><a href="#cb11-81" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scalefun</span>(<span class="at">expand =</span> <span class="fu">expansion</span>()) <span class="sc">+</span></span>
+<span id="cb11-82"><a href="#cb11-82" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_manual</span>(<span class="at">values =</span> colors) <span class="sc">+</span></span>
+<span id="cb11-83"><a href="#cb11-83" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> colors) <span class="sc">+</span></span>
+<span id="cb11-84"><a href="#cb11-84" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> colored_title) <span class="sc">+</span></span>
+<span id="cb11-85"><a href="#cb11-85" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(</span>
+<span id="cb11-86"><a href="#cb11-86" aria-hidden="true" tabindex="-1"></a>      <span class="at">legend.position =</span> <span class="st">"none"</span>,</span>
+<span id="cb11-87"><a href="#cb11-87" aria-hidden="true" tabindex="-1"></a>      <span class="at">plot.title =</span> ggtext<span class="sc">::</span><span class="fu">element_markdown</span>(</span>
+<span id="cb11-88"><a href="#cb11-88" aria-hidden="true" tabindex="-1"></a>        <span class="at">family =</span> fontfamily,</span>
+<span id="cb11-89"><a href="#cb11-89" aria-hidden="true" tabindex="-1"></a>        <span class="at">size =</span> title.size,</span>
+<span id="cb11-90"><a href="#cb11-90" aria-hidden="true" tabindex="-1"></a>        <span class="at">padding =</span> <span class="fu">unit</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">6</span>, <span class="dv">0</span>), <span class="st">"mm"</span>)</span>
+<span id="cb11-91"><a href="#cb11-91" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb11-92"><a href="#cb11-92" aria-hidden="true" tabindex="-1"></a>      <span class="at">axis.title=</span><span class="fu">element_blank</span>(),</span>
+<span id="cb11-93"><a href="#cb11-93" aria-hidden="true" tabindex="-1"></a>      <span class="at">axis.ticks=</span><span class="fu">element_blank</span>(),</span>
+<span id="cb11-94"><a href="#cb11-94" aria-hidden="true" tabindex="-1"></a>      <span class="at">axis.text=</span><span class="fu">element_text</span>(</span>
+<span id="cb11-95"><a href="#cb11-95" aria-hidden="true" tabindex="-1"></a>        <span class="at">family =</span> fontfamily),</span>
+<span id="cb11-96"><a href="#cb11-96" aria-hidden="true" tabindex="-1"></a>      <span class="at">panel.spacing.x =</span> grid<span class="sc">::</span><span class="fu">unit</span>(<span class="fl">1.5</span>, <span class="st">"lines"</span>),</span>
+<span id="cb11-97"><a href="#cb11-97" aria-hidden="true" tabindex="-1"></a>      <span class="at">panel.spacing.y =</span> grid<span class="sc">::</span><span class="fu">unit</span>(<span class="dv">1</span>, <span class="st">"lines"</span>),</span>
+<span id="cb11-98"><a href="#cb11-98" aria-hidden="true" tabindex="-1"></a>      <span class="at">plot.margin=</span><span class="fu">unit</span>(<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>), <span class="st">"cm"</span>)) <span class="sc">+</span></span>
+<span id="cb11-99"><a href="#cb11-99" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_cartesian</span>(<span class="at">clip =</span> <span class="st">"off"</span>)</span>
+<span id="cb11-100"><a href="#cb11-100" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb11-101"><a href="#cb11-101" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (subtitle <span class="sc">!=</span> <span class="st">""</span>) {</span>
+<span id="cb11-102"><a href="#cb11-102" aria-hidden="true" tabindex="-1"></a>    p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">subtitle =</span> subtitle) <span class="sc">+</span></span>
+<span id="cb11-103"><a href="#cb11-103" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme</span>(</span>
+<span id="cb11-104"><a href="#cb11-104" aria-hidden="true" tabindex="-1"></a>      <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(</span>
+<span id="cb11-105"><a href="#cb11-105" aria-hidden="true" tabindex="-1"></a>        <span class="at">size =</span> subtitle.size,</span>
+<span id="cb11-106"><a href="#cb11-106" aria-hidden="true" tabindex="-1"></a>        <span class="at">margin =</span> <span class="fu">unit</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">6</span>, <span class="dv">0</span>), <span class="st">"mm"</span>)</span>
+<span id="cb11-107"><a href="#cb11-107" aria-hidden="true" tabindex="-1"></a>      ))</span>
+<span id="cb11-108"><a href="#cb11-108" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb11-109"><a href="#cb11-109" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb11-110"><a href="#cb11-110" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(facetvar)) {</span>
+<span id="cb11-111"><a href="#cb11-111" aria-hidden="true" tabindex="-1"></a>    extra_args <span class="ot">&lt;-</span> <span class="fu">list</span>(...)</span>
+<span id="cb11-112"><a href="#cb11-112" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">is.null</span>(extra_args<span class="sc">$</span>nrow) <span class="sc">&amp;&amp;</span> <span class="fu">is.null</span>(extra_args<span class="sc">$</span>ncol)) {</span>
+<span id="cb11-113"><a href="#cb11-113" aria-hidden="true" tabindex="-1"></a>      extra_args<span class="sc">$</span>nrow <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb11-114"><a href="#cb11-114" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb11-115"><a href="#cb11-115" aria-hidden="true" tabindex="-1"></a>    p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">do.call</span>(facet_wrap, <span class="fu">c</span>(<span class="fu">list</span>(<span class="at">facets =</span> facetvar), extra_args))</span>
+<span id="cb11-116"><a href="#cb11-116" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb11-117"><a href="#cb11-117" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb11-118"><a href="#cb11-118" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(p)</span>
+<span id="cb11-119"><a href="#cb11-119" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">facet_line</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab10_answer_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We can see from the plot that there is a downward trend in number of people with “Primary education” as their highest attained education, especially for women. The same is true for category H30. On the other hand, especially people with a Masters seems to have risen quite a bit, with women overtaking men.</p>
+<p>It is however a bit hard to judge how much of a difference is present, and for some of the less populated groups it is hard to see what the trend is.</p>
+<section id="showing-a-difference" class="level4">
+<h4 class="anchored" data-anchor-id="showing-a-difference">Showing a difference</h4>
+<p>As we would like to try and satisfy the <a href="https://clauswilke.com/dataviz/proportional-ink.html">The principle of proportional ink</a> as described by Wilke, we take his advice to not use <code>scales = "free_y"</code> and instead plot the difference in response. We can do this by subtracting the first value of each group from all values in that group.</p>
+<p>I implemented us being able to show a difference in a variable by simply adding <code>diff_</code> to the beginning of the variable name.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">facet_line</span>(<span class="at">yvar =</span> <span class="st">"diff_count"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab10_answer_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This plot makes is easier to see that there has actually been a visible increase in both H20 and H50 in addition to H70. The decrease in H10 and H30 is also more visible.</p>
+<p>The plot also much clearer showcases that many more women than men have obtained H50 and H70 as their highest education.</p>
+<blockquote class="blockquote">
+<p>We can, however, still not see the difference very well for the low-frequent groups H40, H60 and H80. We try to solve this below:</p>
+</blockquote>
+<section id="imbedding-scales-free-lines-in-background" class="level5">
+<h5 class="anchored" data-anchor-id="imbedding-scales-free-lines-in-background">Imbedding “scales free” lines in background</h5>
+<p>Though showing the difference in response as above helped see trends over time better than showing absolute values, some groups are still so low-frequent that it’s hard to see differences.</p>
+<p>For this reason, we use <code>gggrid::grid_panel</code> to embed a line plot for each panel that shows the data on a scale native to the range of that subset of data. To ensure it is clear that this is not the “real” data, we make sure to make the lines less wide, we make them slightly transparent, and we desaturate the colors a bit.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>data_scales_free <span class="ot">&lt;-</span> <span class="cf">function</span>(data, coords, <span class="at">desaturate.amount =</span> <span class="fl">0.4</span>, <span class="at">alpha =</span> <span class="fl">0.4</span>) {</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  yrange <span class="ot">&lt;-</span> <span class="fu">range</span>(data<span class="sc">$</span>y)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  xrange <span class="ot">&lt;-</span> <span class="fu">range</span>(data<span class="sc">$</span>x)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  vp <span class="ot">&lt;-</span> <span class="fu">viewport</span>(<span class="at">xscale =</span> xrange, <span class="at">yscale =</span> yrange)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  data_groups <span class="ot">&lt;-</span> <span class="fu">group_split</span>(data, group)</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  lines <span class="ot">&lt;-</span> <span class="fu">lapply</span>(data_groups, <span class="cf">function</span>(data_group) {</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    group_color <span class="ot">&lt;-</span> colorspace<span class="sc">::</span><span class="fu">desaturate</span>(<span class="fu">unique</span>(data_group<span class="sc">$</span>colour), desaturate.amount)</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">linesGrob</span>(<span class="at">x =</span> <span class="fu">unit</span>(data_group<span class="sc">$</span>x, <span class="st">"native"</span>), <span class="at">y =</span> <span class="fu">unit</span>(data_group<span class="sc">$</span>y, <span class="st">"native"</span>),</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>              <span class="at">gp =</span> <span class="fu">gpar</span>(<span class="at">col =</span> group_color, <span class="at">alpha =</span> alpha))</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">do.call</span>(grobTree, <span class="fu">c</span>(lines, <span class="fu">list</span>(<span class="at">vp =</span> vp)))</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="fu">facet_line</span>(<span class="at">yvar =</span> <span class="st">"diff_count"</span>) <span class="sc">+</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>  gggrid<span class="sc">::</span><span class="fu">grid_panel</span>(data_scales_free)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab10_answer_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>From this plot, we can now see that as for H50 and H70, more women than men have gotten H60 as their highest attained education since 2009. The reverse is not visible for H40 and H80, where the increase has been greater for men than women.</p>
+</section>
+</section>
+<section id="adding-direct-labelling-and-more-contrast" class="level4">
+<h4 class="anchored" data-anchor-id="adding-direct-labelling-and-more-contrast">Adding direct labelling and more contrast</h4>
+<p>The CRAP design principles described in <a href="https://www.pearson.com/en-us/subject-catalog/p/non-designers-design-book-the/P200000000691?view=educator">“The Non-Designer’s Design Book”</a> by Robin Williams proposes some design principles to follow when creating visualizations.</p>
+<p>Here we use especially <em>contrast</em> and <em>repetition</em> when creating a plot with an all black background, where we color groups to create a pre-attentive popout effect that is even greater than usual by having a stark contrast to the black. We also use repetition by coloring everything else in the plot with the same grey nuance and using the same font across all text. We also use <em>alignment</em> by aligning the title and the text in the facet labels to the left.</p>
+<p>We use the <code>gggrid</code> package to create direct labelling within facets.</p>
+<section id="helper-functions" class="level5">
+<h5 class="anchored" data-anchor-id="helper-functions">Helper functions</h5>
+<p>We</p>
+<ul>
+<li>Create an <code>add_label</code> function to add the facet labels to the plot using <code>gggrid::grid_panel</code> when creating the <code>ggplot</code>.
+<ul>
+<li>Create <code>direct_facet_labels</code> which uses <code>add_label</code> to add the labels to the plot and remove the default strips from <code>facet_wrap</code> completely.</li>
+</ul></li>
+<li>Create a <code>theme_black()</code> function to create a black background with no grid lines and make all text the same color.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>add_label <span class="ot">&lt;-</span> <span class="cf">function</span>(data, coords,</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">fontfamily =</span> <span class="cn">NULL</span>,</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>                         <span class="at">strip.label.vjust =</span> grid<span class="sc">::</span><span class="fu">unit</span>(<span class="dv">4</span>, <span class="st">"mm"</span>),</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>                         <span class="at">strip.label.fontsize =</span> <span class="dv">9</span>,</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">strip.label.width =</span> <span class="dv">30</span>,</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>                      <span class="at">color =</span> <span class="st">"grey50"</span>) {</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  y1_coord <span class="ot">&lt;-</span> <span class="fu">max</span>(<span class="fu">slice_head</span>(coords, <span class="at">by =</span> <span class="st">"group"</span>)<span class="sc">$</span>y)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  label <span class="ot">&lt;-</span> stringr<span class="sc">::</span><span class="fu">str_wrap</span>(data<span class="sc">$</span>facet,</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>                             <span class="at">width =</span> strip.label.width)</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  facetLabel <span class="ot">&lt;-</span> grid<span class="sc">::</span><span class="fu">textGrob</span>(</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>    label,</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="dv">0</span>,</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> grid<span class="sc">::</span><span class="fu">unit</span>(y1_coord, <span class="st">"npc"</span>) <span class="sc">+</span> strip.label.vjust,</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">just =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>),</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">gp =</span> grid<span class="sc">::</span><span class="fu">gpar</span>(</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>      <span class="at">col =</span> color,</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>      <span class="at">fontsize =</span> strip.label.fontsize,</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>      <span class="at">fontfamily =</span> fontfamily</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>  line <span class="ot">&lt;-</span> grid<span class="sc">::</span><span class="fu">linesGrob</span>(</span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>),</span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">gp =</span> grid<span class="sc">::</span><span class="fu">gpar</span>(<span class="at">col =</span> color)</span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>  grid<span class="sc">::</span><span class="fu">grobTree</span>(facetLabel, line)</span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>direct_facet_labels <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">fontfamily =</span> <span class="cn">NULL</span>,</span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>                         <span class="at">strip.label.vjust =</span> grid<span class="sc">::</span><span class="fu">unit</span>(<span class="dv">4</span>, <span class="st">"mm"</span>),</span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>                         <span class="at">strip.label.fontsize =</span> <span class="dv">9</span>,</span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a>                      <span class="at">color =</span> <span class="st">"grey50"</span>,</span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a>                      <span class="at">facetvar =</span> <span class="st">"highest_education"</span>) {</span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(</span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a>    gggrid<span class="sc">::</span><span class="fu">grid_panel</span>(</span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a>    <span class="cf">function</span>(data, coords) {</span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a>      <span class="fu">add_label</span>(</span>
+<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> data, <span class="at">coords =</span> coords,</span>
+<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a>        <span class="at">fontfamily =</span> fontfamily,</span>
+<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a>        <span class="at">strip.label.vjust =</span> strip.label.vjust,</span>
+<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a>        <span class="at">strip.label.fontsize =</span> strip.label.fontsize,</span>
+<span id="cb15-42"><a href="#cb15-42" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> color)</span>
+<span id="cb15-43"><a href="#cb15-43" aria-hidden="true" tabindex="-1"></a>    } ,</span>
+<span id="cb15-44"><a href="#cb15-44" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">facet =</span> .data[[facetvar]])</span>
+<span id="cb15-45"><a href="#cb15-45" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb15-46"><a href="#cb15-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">strip.background =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb15-47"><a href="#cb15-47" aria-hidden="true" tabindex="-1"></a>        <span class="at">strip.text =</span> <span class="fu">element_blank</span>())</span>
+<span id="cb15-48"><a href="#cb15-48" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb15-49"><a href="#cb15-49" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb15-50"><a href="#cb15-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-51"><a href="#cb15-51" aria-hidden="true" tabindex="-1"></a>theme_black <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">text.color =</span> <span class="st">"grey50"</span>) {</span>
+<span id="cb15-52"><a href="#cb15-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb15-53"><a href="#cb15-53" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.background=</span><span class="fu">element_rect</span>(<span class="at">colour=</span><span class="cn">NA</span>, <span class="at">fill=</span><span class="fu">rgb</span>(.<span class="dv">1</span>,.<span class="dv">1</span>,.<span class="dv">1</span>)),</span>
+<span id="cb15-54"><a href="#cb15-54" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.background=</span><span class="fu">element_rect</span>(<span class="at">colour=</span><span class="cn">NA</span>,</span>
+<span id="cb15-55"><a href="#cb15-55" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">fill=</span><span class="fu">rgb</span>(.<span class="dv">1</span>,.<span class="dv">1</span>,.<span class="dv">1</span>)),</span>
+<span id="cb15-56"><a href="#cb15-56" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.major=</span><span class="fu">element_blank</span>(),</span>
+<span id="cb15-57"><a href="#cb15-57" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.minor=</span><span class="fu">element_blank</span>(),</span>
+<span id="cb15-58"><a href="#cb15-58" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> ggtext<span class="sc">::</span><span class="fu">element_markdown</span>(</span>
+<span id="cb15-59"><a href="#cb15-59" aria-hidden="true" tabindex="-1"></a>         <span class="at">colour =</span> text.color</span>
+<span id="cb15-60"><a href="#cb15-60" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb15-61"><a href="#cb15-61" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(</span>
+<span id="cb15-62"><a href="#cb15-62" aria-hidden="true" tabindex="-1"></a>      <span class="at">colour =</span> text.color</span>
+<span id="cb15-63"><a href="#cb15-63" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb15-64"><a href="#cb15-64" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text =</span> <span class="fu">element_text</span>(</span>
+<span id="cb15-65"><a href="#cb15-65" aria-hidden="true" tabindex="-1"></a>      <span class="at">colour =</span> text.color</span>
+<span id="cb15-66"><a href="#cb15-66" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb15-67"><a href="#cb15-67" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb15-68"><a href="#cb15-68" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="creating-a-crap-plot" class="level5">
+<h5 class="anchored" data-anchor-id="creating-a-crap-plot">Creating a CRAP plot</h5>
+<p>We create the plot using our new helper functions.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">facet_line</span>(<span class="at">yvar =</span> <span class="st">"diff_count"</span>) <span class="sc">+</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">direct_facet_labels</span>(<span class="at">strip.label.vjust =</span> <span class="fu">unit</span>(<span class="dv">15</span>, <span class="st">"mm"</span>)) <span class="sc">+</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_black</span>() <span class="sc">+</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  gggrid<span class="sc">::</span><span class="fu">grid_panel</span>(data_scales_free)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab10_answer_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>As mentioned above, this plot has a better contrast, making for a more powerful preattentive popout effect, and the direct labelling ensures closer proximity between facet groups labels and the data.</p>
+<p>Though it does not directly give us any new information that is not visible from the previous plot, but I do think this plot makes the differences appear clearer.</p>
+</section>
+</section>
+</section>
+</section>
+<section id="distribution-of-socioeconomic-status-across-time" class="level2">
+<h2 class="anchored" data-anchor-id="distribution-of-socioeconomic-status-across-time">Distribution of socioeconomic status across time</h2>
+<p>We create a line plot showing the change of people in each group of socioeconomic status across time. We create the line plot simply by specifying relevant arguments to the <code>facet_line</code> function we made earlier.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">facet_line</span>(<span class="at">colvar =</span> <span class="st">"socioeconomic_status"</span>,</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">facetvar =</span> <span class="cn">NULL</span>,</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">subtitle =</span> <span class="st">""</span>,</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">yvar =</span> <span class="st">"diff_count"</span>) <span class="sc">+</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_black</span>() <span class="sc">+</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"grey50"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab10_answer_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The plot shows an increase in people “enrolled in education” and “employed” from 2009 to 2022, while both “outside the labour force” and “unemplpyed” has decreased across the period.</p>
+<p>We do however see quite a decline in number emplyed from year 2009 until about 2012, where it begins to rise again, reaching about the same level as in 2009 in 2015.</p>
+<p>We would like to highlight the groups “employed” and “unemployed” in the plot to create a preattentive popout effect.</p>
+<section id="highlighting-unemployment" class="level3">
+<h3 class="anchored" data-anchor-id="highlighting-unemployment">Highlighting (un)employment</h3>
+<p>We want to highlight these categories both by desaturating the colors of the other categories as well as making the lines thicker for the highlighted categories.</p>
+<p>Find summarised data with only categories that we want to highlight.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>highlight_cats <span class="ot">&lt;-</span> <span class="fu">unique</span>(<span class="fu">grep</span>(<span class="st">"[Ee]mployed"</span>, highed_long<span class="sc">$</span>socioeconomic_status, <span class="at">value =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>highed_employ <span class="ot">&lt;-</span> highed_long <span class="sc">%&gt;%</span> </span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(socioeconomic_status <span class="sc">%in%</span> highlight_cats)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>highed_employ_sum <span class="ot">&lt;-</span> <span class="fu">summarise_yvar</span>(highed_employ, <span class="at">yvar =</span> <span class="st">"diff_count"</span>, <span class="at">xvar =</span> <span class="st">"year"</span>, <span class="at">groupvars =</span> <span class="fu">c</span>(<span class="st">"socioeconomic_status"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Create a color scheme for the socioeconomic status variable, where we desaturate the colors of the categories that we do not want to highlight.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>cols <span class="ot">&lt;-</span> <span class="fu">get_default_colors</span>(</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  highed_long,</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">colvar =</span> <span class="st">"socioeconomic_status"</span>,</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">"dodgerblue2"</span>, <span class="st">"darkorange1"</span>, <span class="st">"forestgreen"</span>, <span class="st">"purple"</span>)</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>cols[<span class="sc">!</span><span class="fu">names</span>(cols) <span class="sc">%in%</span> highlight_cats] <span class="ot">&lt;-</span> colorspace<span class="sc">::</span><span class="fu">desaturate</span>(</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  cols[<span class="sc">!</span><span class="fu">names</span>(cols) <span class="sc">%in%</span> highlight_cats],</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  <span class="fl">0.5</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Create the plot</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>plot_socstat <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">colors =</span> <span class="cn">NULL</span>, <span class="at">title.size =</span> <span class="dv">24</span>) {</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_line</span>(<span class="at">colvar =</span> <span class="st">"socioeconomic_status"</span>,</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">facetvar =</span> <span class="cn">NULL</span>,</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">subtitle =</span> <span class="st">""</span>,</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">yvar =</span> <span class="st">"diff_count"</span>,</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>           <span class="at">colors =</span> colors,</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>           <span class="at">title.size =</span> title.size) <span class="sc">+</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_black</span>() <span class="sc">+</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"grey50"</span>) <span class="sc">+</span> </span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> highed_employ_sum, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_socstat</span>(<span class="at">colors =</span> cols)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab10_answer_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The plot clearly highlights the categories “employed” and “unemployed”, ensuring that readers will see these categories first.</p>
+<p>Note that I created a manual color scheme for the socioeconomic status variable using a sample of favorite R colors that are nicely placed on the color wheel to play nicely together. Thus, now I want to investigate the effect of this on people with color blindness.</p>
+<section id="color-blindness" class="level4">
+<h4 class="anchored" data-anchor-id="color-blindness">Color blindness</h4>
+<p>Below we try to use the <code>colorspace::deutan()</code> function to see what the plot would look like for a person with deutan color blindness using the color palette that I defined, and using the default from ggplot.</p>
+<blockquote class="blockquote">
+<p>Note that we assume a severity of deutan color blindness of 0.6</p>
+</blockquote>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>cols_default <span class="ot">&lt;-</span> <span class="fu">get_default_colors</span>(</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  highed_long,</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">colvar =</span> <span class="st">"socioeconomic_status"</span>,</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  scales<span class="sc">::</span><span class="fu">pal_hue</span>()(<span class="dv">4</span>)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>cols_default[<span class="sc">!</span><span class="fu">names</span>(cols_default) <span class="sc">%in%</span> highlight_cats] <span class="ot">&lt;-</span> colorspace<span class="sc">::</span><span class="fu">desaturate</span>(</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  cols_default[<span class="sc">!</span><span class="fu">names</span>(cols_default) <span class="sc">%in%</span> highlight_cats],</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="fl">0.5</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>manual_cvd <span class="ot">&lt;-</span> <span class="fu">plot_socstat</span>(<span class="at">colors =</span> colorspace<span class="sc">::</span><span class="fu">deutan</span>(cols, <span class="at">severity =</span> <span class="fl">0.6</span>), <span class="at">title.size =</span> <span class="dv">16</span>) <span class="sc">+</span></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"*Manual* color scheme</span><span class="sc">\n</span><span class="st">**with** CVD"</span>)</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>manual <span class="ot">&lt;-</span> <span class="fu">plot_socstat</span>(<span class="at">colors =</span> cols, <span class="at">title.size =</span> <span class="dv">16</span>) <span class="sc">+</span></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"*Manual* color scheme **without** CVD"</span>)</span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>default_cvd <span class="ot">&lt;-</span> <span class="fu">plot_socstat</span>(<span class="at">colors =</span> colorspace<span class="sc">::</span><span class="fu">deutan</span>(cols_default, <span class="at">severity =</span> <span class="fl">0.6</span>), <span class="at">title.size =</span> <span class="dv">16</span>) <span class="sc">+</span></span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"*Default* color scheme **with** CVD"</span>)</span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>default <span class="ot">&lt;-</span> <span class="fu">plot_socstat</span>(<span class="at">colors =</span> cols_default, <span class="at">title.size =</span> <span class="dv">16</span>) <span class="sc">+</span></span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"*Default* color scheme **without** CVD"</span>)</span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>(manual <span class="sc">|</span> manual_cvd) <span class="sc">/</span></span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>  (default <span class="sc">|</span> default_cvd)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab10_answer_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We see that though the colors are not quite as distinguishable for a person with deutan color blindness, the plots using both color schemes are reasonably readable for a person with CVD.</p>
+</section>
+<section id="animation" class="level4">
+<h4 class="anchored" data-anchor-id="animation">Animation</h4>
+<p>In addition to desaturating colors and creating thicker lines for the highlighted categories, we can use animation to create an even more effective preattentive popout effect.</p>
+<p>To do so, we use <code>gganimate</code>, where we make sure to rename the x variable in the subset of data with the highlighted categories. In this way, we can use <code>gganimate::transition_reveal</code> on this new variable, and in this way keep a static image that the animation “plays on top of”.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gganimate)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>highed_employ_sum_rename <span class="ot">&lt;-</span> highed_employ_sum <span class="sc">%&gt;%</span> </span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">rename</span>(<span class="at">year_new =</span> year)</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="fu">facet_line</span>(<span class="at">colvar =</span> <span class="st">"socioeconomic_status"</span>,</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>           <span class="at">facetvar =</span> <span class="cn">NULL</span>,</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>           <span class="at">subtitle =</span> <span class="st">""</span>,</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>           <span class="at">yvar =</span> <span class="st">"diff_count"</span>,</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>           <span class="at">colors =</span> cols,</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>           <span class="at">title.size =</span> <span class="dv">20</span>) <span class="sc">+</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_black</span>() <span class="sc">+</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"grey50"</span>) <span class="sc">+</span> </span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> year_new),</span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> highed_employ_sum_rename,</span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>                <span class="at">lwd =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> year_new),</span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> highed_employ_sum_rename,</span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>             <span class="at">size =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>  gganimate<span class="sc">::</span><span class="fu">transition_reveal</span>(year_new)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab10_answer_files/figure-html/unnamed-chunk-21-1.gif" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="stratified-by-highest-education" class="level3">
+<h3 class="anchored" data-anchor-id="stratified-by-highest-education">Stratified by highest education</h3>
+<p>We can investigate the distribution of socioeconomic status across time stratified by highest attained education by simply specifying a <code>facetvar</code> in the <code>facet_line</code> function.</p>
+<p>As before, we want to highlight (un)employment, so we create a new summarised data set with only the categories we want to highlight.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>highed_employ_sum2 <span class="ot">&lt;-</span> <span class="fu">summarise_yvar</span>(</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  highed_employ,</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">yvar =</span> <span class="st">"diff_count"</span>,</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">xvar =</span> <span class="st">"year"</span>,</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">groupvars =</span> <span class="fu">c</span>(<span class="st">"socioeconomic_status"</span>, <span class="st">"highest_education"</span>)</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We then create the facetted plot.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">facet_line</span>(<span class="at">colvar =</span> <span class="st">"socioeconomic_status"</span>,</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">facetvar =</span> <span class="st">"highest_education"</span>,</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">yvar =</span> <span class="st">"diff_count"</span>,</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">colors =</span> cols) <span class="sc">+</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">direct_facet_labels</span>(<span class="at">strip.label.vjust =</span> <span class="fu">unit</span>(<span class="dv">8</span>, <span class="st">"mm"</span>)) <span class="sc">+</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_black</span>() <span class="sc">+</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> highed_employ_sum2, <span class="at">lwd =</span> <span class="fl">1.3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab10_answer_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We see that for all other categories than H10 and H30, the difference in number of “Employed” has been consistently greater than the difference of “unemployed”.</p>
+</section>
+</section>
+<section id="distribution-of-socioeconomic-status-across-age-groups" class="level2">
+<h2 class="anchored" data-anchor-id="distribution-of-socioeconomic-status-across-age-groups">Distribution of socioeconomic status across age groups</h2>
+<p>We can quickly also take a look at socioeconomic status across age groups by using the function <code>bar_ratios</code> that was created earlier when we wanted to look at the proportion of men and women in different groups of highest attained education.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>socioeconomic_statuses <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">unique</span>(highed_long<span class="sc">$</span>socioeconomic_status), <span class="at">collapse =</span> <span class="st">", "</span>)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>cols_nodesat <span class="ot">&lt;-</span> <span class="fu">get_default_colors</span>(</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  highed_long,</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">colvar =</span> <span class="st">"socioeconomic_status"</span>,</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">"dodgerblue"</span>, <span class="st">"darkorange1"</span>, <span class="st">"forestgreen"</span>, <span class="st">"purple"</span>)</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="fu">bar_ratios</span>(<span class="at">facetvar =</span> <span class="st">"age"</span>,</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>          <span class="at">colvar =</span> <span class="st">"socioeconomic_status"</span>,</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>          <span class="at">title =</span> <span class="fu">paste0</span>(<span class="st">"Proportion of "</span>,</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>                         socioeconomic_statuses,</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>                         <span class="st">" by age"</span></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>          ),</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>          <span class="at">include_colvar_label =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>          <span class="at">title.width =</span> <span class="dv">55</span>,</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>          <span class="at">title.size =</span> <span class="dv">26</span>,</span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>          <span class="at">ratelabel.digits =</span> <span class="dv">1</span>,</span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>          <span class="at">colors =</span> cols_nodesat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab10_answer_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Not surprisingly, the number of “Enrolled in education” is monotonically decreasing with age. The reverse relationship might have been expected for “Outside the labour force”, however, this is not entirely true as groups 20-24, 25-29 and 30-34 all have a larger proportion of people “Outside the labour force” than age groups 35-39, 40-44 and 45-49. Onwards from there, we do however see a drastic monotonic increase as we near retirement age (which was recently upped to 70 years in Denmark).</p>
+<p>Looking at (un)employment, we see that rates become increasingly favorable when increasing the age group from 25-29 all the way up to 45-49. The age groups 50-54 and 55-59 still have very low unemployment rates, while the employment rate is starting to go down due to the increasing amount of people “Outside the labour force”. The same can be said about the 2 last age groups, just in more dramatic fashion.</p>
+</section>
+<section id="distribution-of-highest-attained-education-across-age-groups" class="level2">
+<h2 class="anchored" data-anchor-id="distribution-of-highest-attained-education-across-age-groups">Distribution of highest attained education across age groups</h2>
+<p>We create a data set that is filtered by only having age groups starting from age 25.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>highed_agef <span class="ot">&lt;-</span> highed_long <span class="sc">%&gt;%</span> </span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age.lower =</span> stringr<span class="sc">::</span><span class="fu">str_extract</span>(age, <span class="st">"^</span><span class="sc">\\</span><span class="st">d{2}"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(age.lower <span class="sc">&gt;=</span> <span class="dv">25</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We can create plots using the functions <code>facet_line</code> and <code>bar_ratios</code> that were already created for answering other questions.</p>
+<p>We note, however, that using a qualitative color scheme with too many categories makes it difficult to decode the categories efficiently. Here we have 8 categories, which can be argued to be too many. At least according to Wilke who notes in <a href="https://clauswilke.com/dataviz/color-pitfalls.html#encoding-too-much-or-irrelevant-information">section 19.1</a> of his <em>Data visualization</em> book that <em>“As a rule of thumb, qualitative color scales work best when there are three to five different categories that need to be colored. Once we reach eight to ten different categories or more, the task of matching colors to categories becomes too burdensome to be useful, even if the colors remain sufficiently different to be distinguishable in principle.”</em>.</p>
+<p>However, there are ways to alleviate these problems.</p>
+<section id="using-an-ordering-of-colors." class="level3">
+<h3 class="anchored" data-anchor-id="using-an-ordering-of-colors.">Using an “ordering” of colors.</h3>
+<p>An “ordering” of colors can help alleviate the problem. This is natural in the bar plot we create by having the colors in the same order of positions in the title and in the plot.</p>
+<p>We extract the categories to create the title and color it like we did for socioeconomic status.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>highest_educations <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">unique</span>(highed_agef<span class="sc">$</span>highest_education), <span class="at">collapse =</span> <span class="st">", "</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>cols_nodesat2 <span class="ot">&lt;-</span> <span class="fu">get_default_colors</span>(</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  highed_agef,</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">colvar =</span> <span class="st">"highest_education"</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="co"># c("dodgerblue", "yellow", "purple", "forestgreen", "red", "darkblue", "darkorange2", "purple")</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="fu">bar_ratios</span>(<span class="at">data =</span> highed_agef,</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>           <span class="at">facetvar =</span> <span class="st">"age"</span>,</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>          <span class="at">colvar =</span> <span class="st">"highest_education"</span>,</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>          <span class="at">title =</span> <span class="fu">paste0</span>(<span class="st">"Proportion of "</span>,</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>                         highest_educations,</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>                         <span class="st">" by age"</span></span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>          ),</span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>          <span class="at">include_colvar_label =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>          <span class="at">title.width =</span> <span class="dv">65</span>,</span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>          <span class="at">title.size =</span> <span class="dv">18</span>,</span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>          <span class="at">ratelabel.digits =</span> <span class="dv">1</span>,</span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>          <span class="at">colors =</span> cols_nodesat2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab10_answer_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="using-interactivity" class="level3">
+<h3 class="anchored" data-anchor-id="using-interactivity">Using interactivity</h3>
+<p>In a line plot, there is not natural “ordering” by colors; the order is determined by the response values in data. Thus, having 8 colored categories in such a plot can make it difficult to decode data values.</p>
+<p>A way to alleviate this is by adding interactivity. We do so by using the <code>ggplotly()</code> function in the <code>plotly</code> package. To create a readable line plot for the user, we</p>
+<ul>
+<li>use the <code>age.lower</code> variable as the x-axis variable to not crowd labels on the x-axis</li>
+<li>rename variables to make them more meaningful in the hovering tooltips created by <code>ggplotly()</code> and select specific aesthetics to show in the tooltips
+<ul>
+<li>double the hoverdistance by adding <code>hoverdistance = 40</code> in the <code>plotly::layout()</code> function</li>
+</ul></li>
+<li>add a legend to enable interactive filtering of groups</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>highed_agef_rename <span class="ot">&lt;-</span> highed_agef <span class="sc">%&gt;%</span> </span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">"Age lower limit"</span> <span class="ot">=</span> age.lower,</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>         <span class="st">"Difference from age group 25-29"</span> <span class="ot">=</span> count,</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>         <span class="st">"Highest attained education"</span> <span class="ot">=</span> highest_education)</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">facet_line</span>(<span class="at">data =</span> highed_agef_rename,</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">colvar =</span> <span class="st">"Highest attained education"</span>,</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>                <span class="at">facetvar =</span> <span class="cn">NULL</span>,</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>                <span class="at">xvar =</span> <span class="st">"Age lower limit"</span>,</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>                <span class="at">yvar =</span> <span class="st">"diff_Difference from age group 25-29"</span>,</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>                <span class="at">ncol =</span> <span class="dv">2</span>,</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>                <span class="at">title.width =</span> <span class="dv">70</span>) <span class="sc">+</span></span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_black</span>() <span class="sc">+</span></span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span>,</span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="cn">NA</span>),</span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">colour =</span> <span class="st">"grey50"</span>)) <span class="sc">+</span></span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">colour =</span> <span class="st">""</span>, <span class="at">title =</span> <span class="st">"Difference in number with Highest Attained Education"</span>)</span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a>plotly<span class="sc">::</span><span class="fu">ggplotly</span>(p, <span class="at">tooltip =</span> <span class="fu">c</span>(<span class="st">"x"</span>, <span class="st">"y"</span>, <span class="st">"colour"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a>  plotly<span class="sc">::</span><span class="fu">layout</span>(</span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="fu">list</span>(</span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a>      <span class="at">subtitle =</span> <span class="fu">list</span>(</span>
+<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a>        <span class="at">text =</span> <span class="st">"By lower limit of age groups"</span></span>
+<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb28-25"><a href="#cb28-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">hoverdistance =</span> <span class="dv">40</span></span>
+<span id="cb28-26"><a href="#cb28-26" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-d77b29c01bd4df3a4eb3" style="width:100%;height:454px;"></div>
+<script type="application/json" data-for="htmlwidget-d77b29c01bd4df3a4eb3">{"x":{"data":[{"x":[1,2,3,4,5,6,7,8,9],"y":[0,-115808,-99300,2612,144543,257293,337559,391320,482282],"text":["Age lower limit: 25<br />Difference from age group 25-29:       0<br />Highest attained education: H10 Primary education","Age lower limit: 30<br />Difference from age group 25-29: -115808<br />Highest attained education: H10 Primary education","Age lower limit: 35<br />Difference from age group 25-29:  -99300<br />Highest attained education: H10 Primary education","Age lower limit: 40<br />Difference from age group 25-29:    2612<br />Highest attained education: H10 Primary education","Age lower limit: 45<br />Difference from age group 25-29:  144543<br />Highest attained education: H10 Primary education","Age lower limit: 50<br />Difference from age group 25-29:  257293<br />Highest attained education: H10 Primary education","Age lower limit: 55<br />Difference from age group 25-29:  337559<br />Highest attained education: H10 Primary education","Age lower limit: 60<br />Difference from age group 25-29:  391320<br />Highest attained education: H10 Primary education","Age lower limit: 65<br />Difference from age group 25-29:  482282<br />Highest attained education: H10 Primary education"],"type":"scatter","mode":"lines","line":{"width":4.1574803149606305,"color":"rgba(248,118,109,1)","dash":"solid"},"hoveron":"points","name":"H10 Primary education","legendgroup":"H10 Primary education","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[1,2,3,4,5,6,7,8,9],"y":[0,-362637,-397353,-377232,-354976,-385183,-441560,-509870,-558116],"text":["Age lower limit: 25<br />Difference from age group 25-29:       0<br />Highest attained education: H20 Upper secondary education","Age lower limit: 30<br />Difference from age group 25-29: -362637<br />Highest attained education: H20 Upper secondary education","Age lower limit: 35<br />Difference from age group 25-29: -397353<br />Highest attained education: H20 Upper secondary education","Age lower limit: 40<br />Difference from age group 25-29: -377232<br />Highest attained education: H20 Upper secondary education","Age lower limit: 45<br />Difference from age group 25-29: -354976<br />Highest attained education: H20 Upper secondary education","Age lower limit: 50<br />Difference from age group 25-29: -385183<br />Highest attained education: H20 Upper secondary education","Age lower limit: 55<br />Difference from age group 25-29: -441560<br />Highest attained education: H20 Upper secondary education","Age lower limit: 60<br />Difference from age group 25-29: -509870<br />Highest attained education: H20 Upper secondary education","Age lower limit: 65<br />Difference from age group 25-29: -558116<br />Highest attained education: H20 Upper secondary education"],"type":"scatter","mode":"lines","line":{"width":4.1574803149606305,"color":"rgba(205,150,0,1)","dash":"solid"},"hoveron":"points","name":"H20 Upper secondary education","legendgroup":"H20 Upper secondary education","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[1,2,3,4,5,6,7,8,9],"y":[0,168017,397802,695266,953552,959905,814919,703253,623551],"text":["Age lower limit: 25<br />Difference from age group 25-29:       0<br />Highest attained education: H30 Vocational Education and Training (VET)","Age lower limit: 30<br />Difference from age group 25-29:  168017<br />Highest attained education: H30 Vocational Education and Training (VET)","Age lower limit: 35<br />Difference from age group 25-29:  397802<br />Highest attained education: H30 Vocational Education and Training (VET)","Age lower limit: 40<br />Difference from age group 25-29:  695266<br />Highest attained education: H30 Vocational Education and Training (VET)","Age lower limit: 45<br />Difference from age group 25-29:  953552<br />Highest attained education: H30 Vocational Education and Training (VET)","Age lower limit: 50<br />Difference from age group 25-29:  959905<br />Highest attained education: H30 Vocational Education and Training (VET)","Age lower limit: 55<br />Difference from age group 25-29:  814919<br />Highest attained education: H30 Vocational Education and Training (VET)","Age lower limit: 60<br />Difference from age group 25-29:  703253<br />Highest attained education: H30 Vocational Education and Training (VET)","Age lower limit: 65<br />Difference from age group 25-29:  623551<br />Highest attained education: H30 Vocational Education and Training (VET)"],"type":"scatter","mode":"lines","line":{"width":4.1574803149606305,"color":"rgba(124,174,0,1)","dash":"solid"},"hoveron":"points","name":"H30 Vocational Education and Training (VET)","legendgroup":"H30 Vocational Education and Training (VET)","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[1,2,3,4,5,6,7,8,9],"y":[0,20117,60671,93977,91428,49217,-6554,-54167,-94036],"text":["Age lower limit: 25<br />Difference from age group 25-29:       0<br />Highest attained education: H40 Short cycle higher education","Age lower limit: 30<br />Difference from age group 25-29:   20117<br />Highest attained education: H40 Short cycle higher education","Age lower limit: 35<br />Difference from age group 25-29:   60671<br />Highest attained education: H40 Short cycle higher education","Age lower limit: 40<br />Difference from age group 25-29:   93977<br />Highest attained education: H40 Short cycle higher education","Age lower limit: 45<br />Difference from age group 25-29:   91428<br />Highest attained education: H40 Short cycle higher education","Age lower limit: 50<br />Difference from age group 25-29:   49217<br />Highest attained education: H40 Short cycle higher education","Age lower limit: 55<br />Difference from age group 25-29:   -6554<br />Highest attained education: H40 Short cycle higher education","Age lower limit: 60<br />Difference from age group 25-29:  -54167<br />Highest attained education: H40 Short cycle higher education","Age lower limit: 65<br />Difference from age group 25-29:  -94036<br />Highest attained education: H40 Short cycle higher education"],"type":"scatter","mode":"lines","line":{"width":4.1574803149606305,"color":"rgba(0,190,103,1)","dash":"solid"},"hoveron":"points","name":"H40 Short cycle higher education","legendgroup":"H40 Short cycle higher education","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[1,2,3,4,5,6,7,8,9],"y":[0,106746,118376,153716,159906,115320,78007,29442,-59263],"text":["Age lower limit: 25<br />Difference from age group 25-29:       0<br />Highest attained education: H50 Vocational bachelors educations","Age lower limit: 30<br />Difference from age group 25-29:  106746<br />Highest attained education: H50 Vocational bachelors educations","Age lower limit: 35<br />Difference from age group 25-29:  118376<br />Highest attained education: H50 Vocational bachelors educations","Age lower limit: 40<br />Difference from age group 25-29:  153716<br />Highest attained education: H50 Vocational bachelors educations","Age lower limit: 45<br />Difference from age group 25-29:  159906<br />Highest attained education: H50 Vocational bachelors educations","Age lower limit: 50<br />Difference from age group 25-29:  115320<br />Highest attained education: H50 Vocational bachelors educations","Age lower limit: 55<br />Difference from age group 25-29:   78007<br />Highest attained education: H50 Vocational bachelors educations","Age lower limit: 60<br />Difference from age group 25-29:   29442<br />Highest attained education: H50 Vocational bachelors educations","Age lower limit: 65<br />Difference from age group 25-29:  -59263<br />Highest attained education: H50 Vocational bachelors educations"],"type":"scatter","mode":"lines","line":{"width":4.1574803149606305,"color":"rgba(0,191,196,1)","dash":"solid"},"hoveron":"points","name":"H50 Vocational bachelors educations","legendgroup":"H50 Vocational bachelors educations","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[1,2,3,4,5,6,7,8,9],"y":[0,-292801,-328182,-341323,-359492,-381426,-396913,-407927,-415146],"text":["Age lower limit: 25<br />Difference from age group 25-29:       0<br />Highest attained education: H60 Bachelors programs","Age lower limit: 30<br />Difference from age group 25-29: -292801<br />Highest attained education: H60 Bachelors programs","Age lower limit: 35<br />Difference from age group 25-29: -328182<br />Highest attained education: H60 Bachelors programs","Age lower limit: 40<br />Difference from age group 25-29: -341323<br />Highest attained education: H60 Bachelors programs","Age lower limit: 45<br />Difference from age group 25-29: -359492<br />Highest attained education: H60 Bachelors programs","Age lower limit: 50<br />Difference from age group 25-29: -381426<br />Highest attained education: H60 Bachelors programs","Age lower limit: 55<br />Difference from age group 25-29: -396913<br />Highest attained education: H60 Bachelors programs","Age lower limit: 60<br />Difference from age group 25-29: -407927<br />Highest attained education: H60 Bachelors programs","Age lower limit: 65<br />Difference from age group 25-29: -415146<br />Highest attained education: H60 Bachelors programs"],"type":"scatter","mode":"lines","line":{"width":4.1574803149606305,"color":"rgba(0,169,255,1)","dash":"solid"},"hoveron":"points","name":"H60 Bachelors programs","legendgroup":"H60 Bachelors programs","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[1,2,3,4,5,6,7,8,9],"y":[0,216583,110934,11324,-94929,-204927,-281101,-330423,-378585],"text":["Age lower limit: 25<br />Difference from age group 25-29:       0<br />Highest attained education: H70 Masters programs","Age lower limit: 30<br />Difference from age group 25-29:  216583<br />Highest attained education: H70 Masters programs","Age lower limit: 35<br />Difference from age group 25-29:  110934<br />Highest attained education: H70 Masters programs","Age lower limit: 40<br />Difference from age group 25-29:   11324<br />Highest attained education: H70 Masters programs","Age lower limit: 45<br />Difference from age group 25-29:  -94929<br />Highest attained education: H70 Masters programs","Age lower limit: 50<br />Difference from age group 25-29: -204927<br />Highest attained education: H70 Masters programs","Age lower limit: 55<br />Difference from age group 25-29: -281101<br />Highest attained education: H70 Masters programs","Age lower limit: 60<br />Difference from age group 25-29: -330423<br />Highest attained education: H70 Masters programs","Age lower limit: 65<br />Difference from age group 25-29: -378585<br />Highest attained education: H70 Masters programs"],"type":"scatter","mode":"lines","line":{"width":4.1574803149606305,"color":"rgba(199,124,255,1)","dash":"solid"},"hoveron":"points","name":"H70 Masters programs","legendgroup":"H70 Masters programs","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[1,2,3,4,5,6,7,8,9],"y":[0,51000,74372,68178,54535,38304,23344,10249,1426],"text":["Age lower limit: 25<br />Difference from age group 25-29:       0<br />Highest attained education: H80 PhD programs","Age lower limit: 30<br />Difference from age group 25-29:   51000<br />Highest attained education: H80 PhD programs","Age lower limit: 35<br />Difference from age group 25-29:   74372<br />Highest attained education: H80 PhD programs","Age lower limit: 40<br />Difference from age group 25-29:   68178<br />Highest attained education: H80 PhD programs","Age lower limit: 45<br />Difference from age group 25-29:   54535<br />Highest attained education: H80 PhD programs","Age lower limit: 50<br />Difference from age group 25-29:   38304<br />Highest attained education: H80 PhD programs","Age lower limit: 55<br />Difference from age group 25-29:   23344<br />Highest attained education: H80 PhD programs","Age lower limit: 60<br />Difference from age group 25-29:   10249<br />Highest attained education: H80 PhD programs","Age lower limit: 65<br />Difference from age group 25-29:    1426<br />Highest attained education: H80 PhD programs"],"type":"scatter","mode":"lines","line":{"width":4.1574803149606305,"color":"rgba(255,97,204,1)","dash":"solid"},"hoveron":"points","name":"H80 PhD programs","legendgroup":"H80 PhD programs","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":85.675723909355654,"r":37.795275590551171,"b":53.137741343975833,"l":76.5167367777658},"plot_bgcolor":"rgba(26,26,26,1)","paper_bgcolor":"rgba(26,26,26,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"title":{"text":"Difference in number with Highest Attained Education","font":{"color":"rgba(127,127,127,1)","family":"","size":31.880448318804486},"x":0,"xref":"paper","subtitle":{"text":"By lower limit of age groups"}},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[1,9],"tickmode":"array","ticktext":["25","30","35","40","45","50","55","60","65"],"tickvals":[1,2,3,4,5,6,7,8,9],"categoryorder":"array","categoryarray":["25","30","35","40","45","50","55","60","65"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(127,127,127,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":false,"gridcolor":null,"gridwidth":0,"zeroline":false,"anchor":"y","title":{"text":"","font":{"color":null,"family":null,"size":0}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-634017.05000000005,1035806.05],"tickmode":"array","ticktext":["-5e+05","0e+00","5e+05","1e+06"],"tickvals":[-500000,0,500000,1000000],"categoryorder":"array","categoryarray":["-5e+05","0e+00","5e+05","1e+06"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(127,127,127,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":false,"gridcolor":null,"gridwidth":0,"zeroline":false,"anchor":"x","title":{"text":"","font":{"color":null,"family":null,"size":0}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":"transparent","bordercolor":"transparent","borderwidth":1.8897637795275593,"font":{"color":"rgba(127,127,127,1)","family":"","size":11.68949771689498},"title":{"text":"","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}}},"hovermode":"closest","barmode":"relative","hoverdistance":40},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"d61652b3b885":{"x":{},"y":{},"colour":{},"fill":{},"type":"scatter"}},"cur_data":"d61652b3b885","visdat":{"d61652b3b885":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+<section id="answering-questions-of-interest-1" class="level3">
+<h3 class="anchored" data-anchor-id="answering-questions-of-interest-1">Answering questions of interest</h3>
+<p>Besides the group 25-29 years, “H10 Primary education” is steadily increasing with age, suggesting that newer generations have an increasing level of education. The most dramatic reverse relationship is for “H70 Masters programs”, which is steadily decreasing with age. In general we see the relationship that groups become smaller with increased age for all educations from level H40 to H80 (except age group 25-29 who are still in process of finishing degrees) as well as for “H20 Upper secondary education”. This means that younger people’s highest attained education generally has a higher level than older groups, whereas older groups consists of a majority of non-academic skilled educations.</p>
+</section>
+</section>
+<section id="overall-summary" class="level1">
+<h1>Overall summary</h1>
+<section id="distribution-of-men-and-women-across-highest-attained-education" class="level2">
+<h2 class="anchored" data-anchor-id="distribution-of-men-and-women-across-highest-attained-education">Distribution of men and women across highest attained education</h2>
+<p>To investigate the proportion of men and women within each group of highest attained education, we create bar plots. We can quite easily create such a plot with <code>ggplot2</code>, but we make use of the <code>grid</code> package to create a plot with direct labelling giving the exact percentages.</p>
+<p>We note that men are a majority of those with “H10 Primary education”, “H30 Vocational education and training (VET)” and “H40 Short cycle higher education”, while more women have highest attained educations of “H50 Vocational bachelors educations” and “H60 Bachelors programs”. For “H70 Masters programs”, the proportion of men and women is almost exactly 50/50, but for “H80 PhD programs” almost 60% are men.</p>
+<section id="across-time" class="level3">
+<h3 class="anchored" data-anchor-id="across-time">Across time</h3>
+<p>To investigate the distribution from years 2009-2022 we create a small multiples line plot. To better be able to see the time trend while still fulfilling the <em>principle of proportional ink</em> we look at the response as the difference from year 2009. To further enhance the visibility of differences for low-frequent groups, we add a line plot to each facet with the data plotted on a scale native to the range of that subset of data. Finally, we create a dark themed plot with <a href="https://www.stat.auckland.ac.nz/~paul/stats787/Current/Topics/design.html#crap-design">CRAP design principles</a> in mind with direct labelling for the groups to ensure a greater <strong>contrast</strong> between the background and the colors in the plot and thus a greater <em>preattentive popout</em> effect. The direct labelling ensures <strong>repitition</strong> by using the same font and color as well as <strong>alignment</strong> and <strong>proximity</strong> by labelling subsets of data close to the lines visualising that subset.</p>
+<p>We see that a big decrease in the group of “H10 Primary education” for both men and women, though most drastic for women. The same is true for “H30 Vocational education and training (VET)”, while all other groups have seen increases. Women have had a bigger increase than men in both “H50 Vocational bachelors educations”, “H60 Bachelors programs” and “H70 Masters programs”, while also having almost the same increase as men for “H80 PhD programs”.</p>
+</section>
+</section>
+<section id="distribution-of-socioeconomic-status" class="level2">
+<h2 class="anchored" data-anchor-id="distribution-of-socioeconomic-status">Distribution of socioeconomic status</h2>
+<section id="across-time-1" class="level3">
+<h3 class="anchored" data-anchor-id="across-time-1">Across time</h3>
+<p>To showcase this, we create a simple line plot using the functions we created for answering questions and gender distributions.</p>
+<p>The plot shows an increase in people “enrolled in education” and “employed” from 2009 to 2022, while both “outside the labour force” and “unemplpyed” has decreased across the period. We do however see quite a decline in number employed from year 2009 until about 2012, where it begins to rise again, reaching about the same level as in 2009 in 2015.</p>
+<p>We wish to highlight this fact and do so by highlighting the lines of “Employed” and “Unemployed” by increasing the linewidth and desaturating the colors of other categories. To further highlight these categories, we create an animation that draws the lines for the highlighted categories. Since socioeconomic status has 4 levels and we only make use of colour as an <em>aesthetic mapping</em>/<em>visual channel</em> (i.e.&nbsp;we do not make use of <em>redundant coding</em>), we check if someone with color-vision-deficiency would be able to read the plot.</p>
+<section id="stratified-by-highest-attained-education" class="level4">
+<h4 class="anchored" data-anchor-id="stratified-by-highest-attained-education">Stratified by highest attained education</h4>
+<p>We create a facetted version of the same line plot, facetted by highest attained education. Most notably, we see that for all other categories than “H10 Primary education” and “H30 Vocational education and training (VET)”, the number of “Employed” has been on a steady increase.</p>
+</section>
+</section>
+<section id="across-age-groups" class="level3">
+<h3 class="anchored" data-anchor-id="across-age-groups">Across age groups</h3>
+<p>Expectedly, the proportion of people enrolled in education declines steadily with age, while those outside the labor force show a less predictable pattern; rising in early adulthood, dipping in mid-life, then increasing sharply approaching retirement. (Un)employment rates improve from ages 25 to 49. Older groups maintain low unemployment while employment rates drop as more exit the labor force.</p>
+</section>
+</section>
+<section id="distribution-of-highest-attained-education-across-age-groups-1" class="level2">
+<h2 class="anchored" data-anchor-id="distribution-of-highest-attained-education-across-age-groups-1">Distribution of highest attained education across age groups</h2>
+<p>Investigating this, we have many categories of highest attained education as well as age groups, which means a lot of information should be embedded in a single plot. We choose to color by highest attained education and alleviate the potential problem of using many colors by using an “ordering” of colors in a bar plot, where the colors are in the same order in the title and in the plot. We also create a line plot, where we add interactivity to ensure that you can hover over the lines to see the values of each group as well as filter by group using the legend.</p>
+<p>Educational attainment generally increases in younger age groups, with more individuals completing higher education levels like master’s programs. In contrast, older age groups tend to have lower educational levels, primarily non-academic or vocational training. The 25–29 age group is an exception, as many are still completing their studies.</p>
+
+
+</section>
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/mathiaslj\.github\.io\/stats787uoa-data-visualisation\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/mathiaslj/stats787uoa-data-visualisation/blob/main/labs/lab10_answer.Rmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer></body></html>
